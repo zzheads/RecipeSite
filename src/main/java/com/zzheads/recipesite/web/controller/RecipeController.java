@@ -145,28 +145,4 @@ public class RecipeController {
         return "redirect:/";
     }
 
-//    @RequestMapping(path = "/bycategory/{categoryId}", method = RequestMethod.GET)
-//    public String filterByCategory(@PathVariable Long categoryId, RedirectAttributes attributes) {
-//        Category category = categoryService.findById(categoryId);
-//        if (!Objects.equals(category.getName(), "Unassigned")) {
-//            List<Recipe> recipes = recipeService.findByCategory(category);
-//            attributes.addFlashAttribute("recipes", recipes);
-//            attributes.addFlashAttribute("recipesFavorites", recipeService.getRecipesFavorites(recipes, getLoggedUser()));
-//            attributes.addFlashAttribute("selectedCategory", category);
-//            attributes.addFlashAttribute("flash", new FlashMessage(String.format("Listed recipes of \"%s\" category only.", category.getName()), FlashMessage.Status.INFO));
-//        } else {
-//            attributes.addFlashAttribute("flash", new FlashMessage("Listed all recipes, because you've selected \"Unassigned\" category.", FlashMessage.Status.INFO));
-//        }
-//        return "redirect:/";
-//    }
-
-    @RequestMapping(path = "/bypattern/{pattern}.{method}", method = RequestMethod.GET)
-    public String filterByCategory(@PathVariable String pattern, @PathVariable String method,RedirectAttributes attributes) {
-        List<Recipe> recipes = recipeService.findByPattern(pattern, method);
-        attributes.addFlashAttribute("recipes", recipes);
-        attributes.addFlashAttribute("recipesFavorites", recipeService.getRecipesFavorites(recipes, getLoggedUser()));
-        attributes.addFlashAttribute("pattern", pattern);
-        attributes.addFlashAttribute("method", method);
-        return "redirect:/";
-    }
 }

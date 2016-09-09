@@ -31,7 +31,6 @@ public class RecipeApi {
         this.userService = userService;
     }
 
-
     public User getLoggedUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }

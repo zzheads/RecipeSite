@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<nav th:replace="layout :: nav"></nav>
+
+<div class="grid-container">
+
+    <div th:replace="layout :: logo"></div>
+    <div th:replace="layout :: flash"></div>
+
+    <div class="grid-100">
+        <div class="recipes">
+
+            <div class="grid-100 row controls">
+                <div class="grid-30">
+                    <p>User</p>
+                </div>
+                <div class="grid-30">
+                    <p>Password</p>
+                </div>
+                <div class="grid-20">
+                    <p>Role</p>
+                </div>
+                <div class="grid-20">
+                    <div class="flush-right">
+                        <a href="#"><button type="button" onclick="addUser()">Add User</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-100 row">
+                 <div th:each="user, stat : ${users}" class="recipes">
+                     <div class="grid-30">
+                         <p>
+                            <input th:id="@{'inputUsername#' + ${stat.index}}" th:value="${user.username}"/>
+                         </p>
+                      </div>
+                     <div class="grid-30">
+                         <p>
+                            <input th:id="@{'inputPassword#' + ${stat.index}}" th:value="${user.password}"/>
+                         </p>
+                     </div>
+                     <div class="grid-20">
+                         <p>
+                            <input th:id="@{'inputRole#' + ${stat.index}}" th:value="${user.role.name}"/>
+                         </p>
+                     </div>
+                     <div class="grid-20">
+                         <div class="flush-right">
+                            <p>
+                                <a href="#"><button type="button">Save</button></a>
+                            </p>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+
+        </div> <!-- recipes -->
+    </div> <!-- grid-100 -->
+</div> <!-- grid-container -->
+
+<script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/flashMessage.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/admin.js" type="text/javascript" charset="utf-8"></script>
+</body>
+<div th:replace="layout :: footer"></div>
+</html>

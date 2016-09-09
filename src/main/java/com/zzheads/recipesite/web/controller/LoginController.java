@@ -32,6 +32,12 @@ public class LoginController {
         this.userService = userService;
     }
 
+    @RequestMapping(path = "/admin", method = RequestMethod.GET)
+    public String adminPanel(Model model) {
+        model.addAttribute("users", userService.findAll());
+        return "admin";
+    }
+
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String loginForm(Model model, HttpServletRequest request) {
         model.addAttribute("user", new User());
