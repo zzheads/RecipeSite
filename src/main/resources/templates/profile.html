@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<nav th:replace="layout :: nav"></nav>
+
+<div class="grid-container">
+
+  <div th:replace="layout :: logo"></div>
+  <div th:replace="layout :: flash"></div>
+
+  <div class="grid-100">
+
+    <div class="recipes">
+
+        <div class="grid-100 row controls">
+          <div class="grid-100">
+            <h2 th:text="${user.username}"> Chandra S. </h2>
+          </div>
+        </div> <div class="clear"></div>
+
+        <div th:each="recipe, stat : ${recipes}" class="grid-100 row addHover">
+          <a th:href="@{'/detail/' + ${recipe.id}}">
+            <div class="grid-70">
+              <p th:inline="text">
+                <span th:if="${recipesFavorites[__${stat.index}__]} == true"><img src="../assets/images/favorited.svg" height="12px"/></span>
+                <span th:if="${recipesFavorites[__${stat.index}__]} != true"><img src="../assets/images/favorite.svg" height="12px"/></span>
+                [[@{' ' + ${recipe.name}}]]
+              </p>
+            </div>
+          </a>
+          <div class="hoverBlock">
+            <div class="grid-30">
+              <div class="flush-right">
+                <p>
+                  <a th:href="@{'/edit/' + ${recipe.id}}" class="button"><img src="../assets/images/edit.svg" height="12px"/>Edit</a>
+                  <a th:href="@{'/delete/' + ${recipe.id}}" class="button"><img src="../assets/images/delete.svg" height="12px"/>Delete</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <div class="clear"></div>
+
+        <div class="row">&nbsp;</div>
+
+      </div> <!-- recipes -->
+    </div> <!-- grid-100 -->
+  </div> <!-- grid-container -->
+</body>
+<div th:replace="layout :: footer"></div>
+</html>

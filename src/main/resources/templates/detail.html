@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<nav th:replace="layout :: nav"></nav>
+
+<div class="grid-container">
+
+  <div th:replace="layout :: logo"></div>
+  <div th:replace="layout :: flash"></div>
+
+  <div class="grid-100">
+
+    <div class="recipes">
+
+      <div class="grid-100 row controls">
+
+        <div class="grid-50">
+          <p hidden="hidden" id="recipeId" th:text="${recipe.id}"></p>
+          <h2 th:text="${recipe.name}"> Brioche French Toast with Nutella </h2>
+        </div>
+
+        <div class="grid-50">
+          <h2 class="flush-right" id="picHere">
+            <img id="favoritedSvg" th:if="${recipeFavorite} == true" src="../assets/images/favorited.svg" height="16px" onclick="toggleFavorite()"/>
+            <img id="favoriteSvg" th:if="${recipeFavorite} != true" src="../assets/images/favorite.svg" height="16px" onclick="toggleFavorite()"/>
+          </h2>
+        </div>
+      </div><div class="clear"></div>
+      <input type="hidden" id="recipeFavorite" th:field="${recipeFavorite}" th:value="${recipeFavorite}"/>
+
+      <div th:if="${userDetails} != null" class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Owner user </label>
+          </p>
+        </div>
+        <div class="grid-40">
+          <p th:text="${recipe.user.username}">
+            Brioche French Toast with Nutella
+          </p>
+        </div>
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Name </label>
+          </p>
+        </div>
+        <div class="grid-40">
+          <p th:text="${recipe.name}">
+            Brioche French Toast with Nutella
+          </p>
+        </div>
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p class="label-spacing">
+            <label> Photo </label>
+          </p>
+        </div>
+        <div class="grid-40">
+          <p>
+            <a href="#">
+              <img th:src="@{'/photos/' + ${recipe.id} + '.png'}" height="60px" onclick="openImageWindow(this.src)"/>
+            </a>
+          </p>
+        </div>
+      </div><div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Description </label>
+          </p>
+        </div>
+        <div class="grid-40">
+          <p th:text="${recipe.description}">
+            Yummmy dessert toast covered in egg wash and topped with nutella and seasonal fruit.
+          </p>
+        </div>
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Category </label>
+          </p>
+        </div>
+        <div class="grid-30">
+          <p th:text="${recipe.category}">
+            Dessert
+          </p>
+        </div>
+      </div><div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Prep Time </label>
+          </p>
+        </div>
+        <div class="grid-20">
+          <p th:text="${recipe.prepTime}">
+            5 minutes
+          </p>
+        </div>
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+        <div class="grid-20">
+          <p>
+            <label> Cook Time </label>
+          </p>
+        </div>
+        <div class="grid-20">
+          <p th:text="${recipe.cookTime}">
+            15 minutes
+          </p>
+        </div>
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+
+        <div class="grid-20">
+          <p>
+            <label> Ingredients </label>
+          </p>
+        </div>
+        <div class="grid-30">
+          <p>
+            <label> Item </label>
+          </p>
+        </div>
+        <div class="grid-30">
+          <p>
+            <label> Condition </label>
+          </p>
+        </div>
+        <div class="grid-20">
+          <p>
+            <label> Quantity </label>
+          </p>
+        </div>
+
+        <div th:each="ingredient, stat : ${recipe.ingredients}" class="ingredient-row">
+          <div class="prefix-20 grid-30">
+            <p th:text="${ingredient}">
+              Eggs
+            </p>
+          </div>
+          <div class="grid-30">
+            <p  th:text="${recipe.conditions[__${stat.index}__]}">
+              Fresh
+            </p>
+          </div>
+          <div class="grid-10 suffix-10">
+            <p  th:text="${recipe.quantities[__${stat.index}__]}">
+              2
+            </p>
+          </div>
+        </div>
+
+      </div> <div class="clear"></div>
+
+      <div class="grid-100 row">
+
+        <div class="grid-20">
+          <p>
+            <label> Steps </label>
+          </p>
+        </div>
+        <div class="grid-80">
+          <p>
+            <label> Description </label>
+          </p>
+        </div>
+
+        <div th:each="step : ${recipe.steps}" class="step-row">
+          <div class="prefix-20 grid-80">
+            <p  th:text="${step}">
+              1. Crack your eggs and beat them.
+            </p>
+          </div>
+        </div>
+
+      </div> <div class="clear"></div>
+
+      <div class="row">&nbsp;</div>
+
+    </div> <!-- recipes -->
+  </div> <!-- grid-100 -->
+</div> <!-- grid-container -->
+
+<script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/toggleFavorite.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/openImageWindow.js" type="text/javascript" charset="utf-8"></script>
+</body>
+<div th:replace="layout :: footer"></div>
+</html>

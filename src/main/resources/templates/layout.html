@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head th:fragment="head">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="A simple recipes web application."/>
+        <title>Recipe Site</title>
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" th:href="@{../assets/css/unsemantic-grid-responsive.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{../assets/css/styles.css}"/>
+    </head>
+
+<body>
+
+    <header th:fragment="header">
+        <h1>thats header Recipe Site</h1>
+    </header>
+
+    <nav th:fragment="nav" class="nav">
+        <div class="nav>">
+            <span sec:authorize="isAuthenticated()">
+                <a th:href="@{/profile}" th:text="${user.username}">Chris Ramazzotti</a>
+            </span>
+            &bullet;
+            <span>
+                <a sec:authorize="isAuthenticated()" th:href="@{/logout}">logout</a>
+                <a sec:authorize="isAnonymous()" th:href="@{/login}">login</a>
+            </span>
+        </div>
+    </nav>
+
+    <div th:fragment="logo" class="grid-100">
+        <a th:href="@{/}">
+            <h1>
+                <img th:src="@{../assets/images/chefbot.svg}" height="60px"/>
+                <br/>
+                My Recipes
+            </h1>
+        </a>
+    </div>
+
+    <div id="flashMessage" th:fragment="flash" class="grid-100">
+        <div th:if="${flash != null}" class="grid-100 row controls">
+            <div class="message">
+                <div th:classappend="${#strings.toLowerCase(flash.status)}" class="flash">
+
+                    <p th:inline="text">
+                        <a href="#"><span onclick="clearFlash()" class="flashspan"> [X]</span></a>
+                        [[${flash.message}]]
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="clear" class="clear"></div>
+
+    <div th:fragment="recipe" class="grid-100">
+        <div class="recipes">
+            <a th:href="@{'/recipe/' + ${recipe.id}}">
+                <div class="grid-70">
+                    <img src="../assets/images/favorite.svg" height="12px"/><span th:text="@{' ' + ${recipe.name}}">Baked Alaskan Salmon with Asparagus</span>
+                </div>
+            </a>
+
+            <div class="hoverBlock">
+                <div class="grid-30">
+                    <div class="flush-right">
+                        <a th:href="@{'/edit/' + ${recipe.id}}"><img src="../assets/images/edit.svg" height="12px"/>Edit</a>
+                        <a th:href="@{'/delete/' + ${recipe.id}}"><img src="../assets/images/delete.svg" height="12px"/>Delete</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer th:fragment="footer">
+        <p>(c) Alexey Papin, 2016</p>
+    </footer>
+
+</body>
+</html>
