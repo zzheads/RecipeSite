@@ -29,8 +29,9 @@
                 </div>
             </div>
 
-            <div class="grid-100 row">
-                 <div th:each="user, stat : ${users}" class="recipes">
+            <div id="users" class="grid-100 row">
+                 <div th:each="user, stat : ${users}" th:id="@{'user#' +${stat.index}}" class="recipes">
+                    <p th:id="@{'getIdByCount#' + ${stat.index}}" th:text="${user.id}" hidden="hidden"></p>
                      <div class="grid-30">
                          <p>
                             <input th:id="@{'inputUsername#' + ${stat.index}}" th:value="${user.username}"/>
@@ -41,15 +42,16 @@
                             <input th:id="@{'inputPassword#' + ${stat.index}}" th:value="${user.password}"/>
                          </p>
                      </div>
-                     <div class="grid-20">
+                     <div class="grid-15">
                          <p>
                             <input th:id="@{'inputRole#' + ${stat.index}}" th:value="${user.role.name}"/>
                          </p>
                      </div>
-                     <div class="grid-20">
+                     <div class="grid-25">
                          <div class="flush-right">
                             <p>
-                                <a href="#"><button type="button">Save</button></a>
+                                <a href="#"><button type="button" th:id="@{'buttonDelete#' + ${stat.index}}" onclick="deleteUser(this.id)">Delete</button></a>
+                                <a href="#"><button type="button" th:id="@{'buttonSave#' + ${stat.index}}" onclick="saveUser(this.id)">Save</button></a>
                             </p>
                         </div>
                      </div>
@@ -60,7 +62,7 @@
     </div> <!-- grid-100 -->
 </div> <!-- grid-container -->
 
-<script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/flashMessage.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/admin.js" type="text/javascript" charset="utf-8"></script>
 </body>
