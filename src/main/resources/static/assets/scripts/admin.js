@@ -6,22 +6,18 @@ function getRoleUser() {
     return role;
 }
 
-function getIdByCount (count) {
-    return document.getElementById("getIdByCount#"+count).innerText;
+function getUsernameById (id) {
+    return document.getElementById("inputUsername#"+id).value;
 }
 
-function getUsernameByCount (count) {
-    return document.getElementById("inputUsername#"+count).value;
+function getPasswordById (id) {
+    return document.getElementById("inputPassword#"+id).value;
 }
 
-function getPasswordByCount (count) {
-    return document.getElementById("inputPassword#"+count).value;
-}
-
-function getRoleByCount (count) {
+function getRoleById (id) {
     var role = {
         id: 0, // unknown
-        name: document.getElementById("inputRole#"+count).value
+        name: document.getElementById("inputRole#"+id).value
     };
     return role;
 }
@@ -37,30 +33,28 @@ function countUsers() {
 }
 
 function toHtml (user) {
-    var nextIndex = countUsers()+1;
     var html = "";
-    html += "<div id=\"user#" + nextIndex + "\" class=\"recipes\">";
-    html += "<p id=\"getIdByCount#" + nextIndex + "\" text=\"" + user.id + "\" hidden=\"hidden\"></p>";
+    html += "<div id=\"user#" + user.id + "\" class=\"recipes\">";
     html += "<div class=\"grid-30\">";
     html += "<p>";
-    html += "<input id=\"inputUsername#" + nextIndex + "\" value=\"" + user.username + "\"/>";
+    html += "<input id=\"inputUsername#" + user.id + "\" value=\"" + user.username + "\"/>";
     html += "</p>";
     html += "</div>";
     html += "<div class=\"grid-30\">";
     html += "<p>";
-    html += "<input id=\"inputPassword#" + nextIndex + "\" value=\"" + user.password + "\"/>";
+    html += "<input id=\"inputPassword#" + user.id + "\" value=\"" + user.password + "\"/>";
     html += "</p>";
     html += "</div>";
     html += "<div class=\"grid-15\">";
     html += "<p>";
-    html += "<input id=\"inputRole#" + nextIndex + "\" value=\"" + user.role.name + "\"/>";
+    html += "<input id=\"inputRole#" + user.id + "\" value=\"" + user.role.name + "\"/>";
     html += "</p>";
     html += "</div>";
     html += "<div class=\"grid-25\">";
     html += "<div class=\"flush-right\">";
     html += "<p>";
-    html += "<a href=\"#\"><button type=\"button\" id=\"buttonDelete#" + nextIndex + "\" onclick=\"deleteUser(this.id)\">Delete</button></a> ";
-    html += "<a href=\"#\"><button type=\"button\" id=\"buttonSave#" + nextIndex + "\" onclick=\"saveUser(this.id)\">Save</button></a>";
+    html += "<a href=\"#\"><button type=\"button\" id=\"buttonDelete#" + user.id + "\" onclick=\"deleteUser(this.id)\">Delete</button></a> ";
+    html += "<a href=\"#\"><button type=\"button\" id=\"buttonSave#" + user.id + "\" onclick=\"saveUser(this.id)\">Save</button></a>";
     html += "</p>";
     html += "</div>";
     html += "</div>";
@@ -88,48 +82,125 @@ function addUser() {
             $("#users").append(toHtml(data));
             clearFlash();
             printFlashMessage("User (id="+data.id+") added.", "success");
-        }
+        },
+        error: getErrorMsg
     });
 }
 
 function deleteUser(buttonId) {
-    var count = buttonId.split('#').pop();
-    console.log("Deleting user (count=" + count + ", id=" + getIdByCount(count) + ").");
+    var id = buttonId.split('#').pop();
+    console.log("Deleting user (id=" + id + ").");
 
     $.ajax({
-        url: "/user/"+getIdByCount(count),
+        url: "/user/"+id,
         type: "DELETE",
         dataType: "json",
         success: function () {
-            document.getElementById("user#"+count).remove();
             clearFlash();
-            printFlashMessage("User (id="+getIdByCount(count)+") deleted.", "success");
-        }
+            printFlashMessage("User (id="+id+") deleted.", "success");
+            document.getElementById("user#"+id).remove();
+        },
+        error: getErrorMsg
     });
 }
 
 function saveUser(buttonId) {
-    var count = buttonId.split('#').pop();
+    var id = buttonId.split('#').pop();
 
+    console.log(id);
     var user = {
-        id: getIdByCount(count),
-        username: getUsernameByCount(count),
-        password: getPasswordByCount(count),
-        role: getRoleByCount(count)
+        id: id,
+        username: getUsernameById(id),
+        password: getPasswordById(id),
+        role: getRoleById(id),
+        enabled: true
     };
-    console.log("Saving user (id=" + user.id + ").");
+    console.log(user);
+    console.log(JSON.stringify(user, null, "\t"));
 
     $.ajax({
         url: "/user/"+user.id,
         type: "PUT",
         dataType: "json",
-        data: JSON.stringify(user, null, "\t"),
+        contentType: "application/json",
+        data: JSON.stringify(user),
         success: function (data) {
             document.getElementById("user#"+user.id).remove();
             $("#users").append(toHtml(data));
             clearFlash();
-            printFlashMessage("User (previous id="+user.id+", new id="+data.id+") saved.", "success");
-        }
+            printFlashMessage("User (id="+data.id+") saved.", "success");
+        },
+        error: getErrorMsg
     });
 }
 
+function getErrorMsg (jqXHR, textStatus, errorThrown) {
+    clearFlash();
+    printFlashMessage(jqXHR.responseText, "failure");
+}
+
+function checkUsers() {
+    $("#buttonsHere").children().remove();
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\">Back to Edit</button></a>");
+    $("#users").hide();
+    $.ajax({
+        url: "/user",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#bases").append("<h1> Users: </h1>");
+            for (i=0;i<data.length;i++) {
+                $("#bases").append("<div>"+"<p>"+"id: " + data[i].id+"</p>"+"<p>"+"username: " + data[i].username+"</p>"+"<p>"+"password: " + data[i].password+"</p>"+"<p>"+"role: " + data[i].role.name+"</p>"+"</div>");
+            }
+        },
+        error: getErrorMsg
+    });
+}
+
+function checkRecipes() {
+    $("#buttonsHere").children().remove();
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\">Back to Edit</button></a>");
+    $("#users").hide();
+    $.ajax({
+        url: "/recipe",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#bases").append("<h1> Recipes: </h1>");
+            for (i=0;i<data.length;i++) {
+                $("#bases").append(
+                    "<div>"+
+                    "<p>"+
+                    "id:"+data[i].id+
+                    "</p>"+
+                    "<p>"+
+                    "name:"+data[i].name+
+                    "</p>"+
+                    "<p>"+
+                    "description:"+data[i].description+
+                    "</p>"+
+                    "<p>"+
+                    "category:"+data[i].category.name+
+                    "</p>"+
+                    "<p>"+
+                    "prepTime:"+data[i].prepTime+
+                    "</p>"+
+                    "<p>"+
+                    "cookTime:"+data[i].cookTime+
+                    "</p>"+
+
+                                                "</div>");
+            }
+        },
+        error: getErrorMsg
+    });
+}
+
+function backToEdit() {
+    $("#buttonsHere").children().remove();
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkRecipesButton\" type=\"button\" onclick=\"checkRecipes()\">Check Recipes</button></a> ");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkUsersButton\" type=\"button\" onclick=\"checkUsers()\">Check Users</button></a> ");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"addUserButton\" type=\"button\" onclick=\"addUser()\">Add User</button></a>");
+    $("#users").show();
+    $("#bases").children().remove();
+}

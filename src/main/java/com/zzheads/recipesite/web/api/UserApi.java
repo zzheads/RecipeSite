@@ -39,8 +39,10 @@ public class UserApi {
             role = new Role("ROLE_USER");
             roleService.save(role);
         }
+        user.setUsername(String.valueOf(Math.random()*9999999));
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setId(null);
         userService.save(user);
         return user.toJson();
     }
@@ -56,6 +58,14 @@ public class UserApi {
     @ResponseStatus (HttpStatus.OK)
     public @ResponseBody String updateUser(@RequestBody String jsonString, @PathVariable Long id) {
         User updatingUser = User.fromJson(jsonString);
+        Role role = updatingUser.getRole();
+        if (roleService.findByName(role.getName()) == null) { // new Role
+            roleService.save(role);
+        } else {
+            role = roleService.findByName(role.getName());
+            updatingUser.setRole(role);
+        }
+
         User user = userService.findById(id);
         user.setProperties(updatingUser);
         userService.save(user);

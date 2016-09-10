@@ -13,49 +13,55 @@
         <div class="recipes">
 
             <div class="grid-100 row controls">
-                <div class="grid-30">
-                    <p>User</p>
-                </div>
-                <div class="grid-30">
-                    <p>Password</p>
+                <div class="grid-20">
+                    <p></p>
                 </div>
                 <div class="grid-20">
-                    <p>Role</p>
+                    <p></p>
                 </div>
                 <div class="grid-20">
+                    <p></p>
+                </div>
+                <div class="grid-40">
                     <div class="flush-right">
-                        <a href="#"><button type="button" onclick="addUser()">Add User</button></a>
+                        <p id="buttonsHere">
+                            <a href="#"><button id="checkRecipesButton" type="button" onclick="checkRecipes()">Check Recipes</button></a>
+                            <a href="#"><button id="checkUsersButton" type="button" onclick="checkUsers()">Check Users</button></a>
+                            <a href="#"><button id="addUserButton" type="button" onclick="addUser()">Add User</button></a>
+                        </p>
                     </div>
                 </div>
             </div>
 
             <div id="users" class="grid-100 row">
-                 <div th:each="user, stat : ${users}" th:id="@{'user#' +${stat.index}}" class="recipes">
-                    <p th:id="@{'getIdByCount#' + ${stat.index}}" th:text="${user.id}" hidden="hidden"></p>
+                 <div th:each="user, stat : ${users}" th:id="@{'user#' +${user.id}}" class="recipes">
                      <div class="grid-30">
                          <p>
-                            <input th:id="@{'inputUsername#' + ${stat.index}}" th:value="${user.username}"/>
+                            <input th:id="@{'inputUsername#' + ${user.id}}" th:value="${user.username}"/>
                          </p>
                       </div>
                      <div class="grid-30">
                          <p>
-                            <input th:id="@{'inputPassword#' + ${stat.index}}" th:value="${user.password}"/>
+                            <input th:id="@{'inputPassword#' + ${user.id}}" th:value="${user.password}"/>
                          </p>
                      </div>
                      <div class="grid-15">
                          <p>
-                            <input th:id="@{'inputRole#' + ${stat.index}}" th:value="${user.role.name}"/>
+                            <input th:id="@{'inputRole#' + ${user.id}}" th:value="${user.role.name}"/>
                          </p>
                      </div>
                      <div class="grid-25">
                          <div class="flush-right">
                             <p>
-                                <a href="#"><button type="button" th:id="@{'buttonDelete#' + ${stat.index}}" onclick="deleteUser(this.id)">Delete</button></a>
-                                <a href="#"><button type="button" th:id="@{'buttonSave#' + ${stat.index}}" onclick="saveUser(this.id)">Save</button></a>
+                                <a href="#"><button type="button" th:id="@{'buttonDelete#' + ${user.id}}" onclick="deleteUser(this.id)">Delete</button></a>
+                                <a href="#"><button type="button" th:id="@{'buttonSave#' + ${user.id}}" onclick="saveUser(this.id)">Save</button></a>
                             </p>
                         </div>
                      </div>
                  </div>
+            </div>
+
+            <div id="bases" class="grid-100 row">
             </div>
 
         </div> <!-- recipes -->
