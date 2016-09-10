@@ -39,7 +39,6 @@ public class UserApi {
             role = new Role("ROLE_USER");
             roleService.save(role);
         }
-        user.setUsername(String.valueOf(Math.random()*9999999));
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setId(null);

@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: head"></head>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="A simple recipes web application."/>
+    <title>Recipe Site / Admin panel</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald|PT+Sans|Roboto|Ubuntu|Ubuntu+Condensed" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{../assets/css/unsemantic-grid-responsive.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{../assets/css/mystyles.css}"/>
+</head>
+
 <body>
 <nav th:replace="layout :: nav"></nav>
 
@@ -13,20 +24,17 @@
         <div class="recipes">
 
             <div class="grid-100 row controls">
-                <div class="grid-20">
-                    <p></p>
+                <div class="grid-30">
+                    <p id="titleHere">
+                        <h1  id="title">Admin Panel</h1>
+                    </p>
                 </div>
-                <div class="grid-20">
-                    <p></p>
-                </div>
-                <div class="grid-20">
-                    <p></p>
-                </div>
-                <div class="grid-40">
+                <div class="grid-70">
                     <div class="flush-right">
                         <p id="buttonsHere">
-                            <a href="#"><button id="checkRecipesButton" type="button" onclick="checkRecipes()">Check Recipes</button></a>
-                            <a href="#"><button id="checkUsersButton" type="button" onclick="checkUsers()">Check Users</button></a>
+                            <a href="#"><button id="checkCategoriesButton" type="button" onclick="checkCategories()" class="secondary">Check Categories</button></a>
+                            <a href="#"><button id="checkRecipesButton" type="button" onclick="checkRecipes()" class="secondary">Check Recipes</button></a>
+                            <a href="#"><button id="checkUsersButton" type="button" onclick="checkUsers()" class="secondary">Check Users</button></a>
                             <a href="#"><button id="addUserButton" type="button" onclick="addUser()">Add User</button></a>
                         </p>
                     </div>

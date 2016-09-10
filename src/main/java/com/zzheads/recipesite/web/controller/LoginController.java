@@ -4,9 +4,11 @@ import com.zzheads.recipesite.model.Recipe;
 import com.zzheads.recipesite.model.User;
 import com.zzheads.recipesite.service.RecipeService;
 import com.zzheads.recipesite.service.UserService;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +36,8 @@ public class LoginController {
 
     @RequestMapping(path = "/admin", method = RequestMethod.GET)
     public String adminPanel(Model model) {
-        model.addAttribute("users", userService.findAll());
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
         return "admin";
     }
 

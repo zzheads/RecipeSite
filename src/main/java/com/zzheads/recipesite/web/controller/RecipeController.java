@@ -88,6 +88,10 @@ public class RecipeController {
         if (!getLoggedUser().getAuthorities().contains("ROLE_ADMIN") && !recipe.getUser().equals(getLoggedUser())) {
             attributes.addFlashAttribute("flash", new FlashMessage(String.format("You can not delete this recipe, only owner (%s) can do it. Access denied.", recipe.getUser().getUsername()), FlashMessage.Status.FAILURE));
         } else {
+            if (recipe.getCategory()!=null) {
+                recipe.getCategory().removeRecipe(recipe);
+                categoryService.save(recipe.getCategory());
+            }
             recipeService.delete(id);
             attributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted.", FlashMessage.Status.SUCCESS));
         }

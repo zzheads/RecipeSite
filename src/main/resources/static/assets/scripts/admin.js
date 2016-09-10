@@ -141,16 +141,23 @@ function getErrorMsg (jqXHR, textStatus, errorThrown) {
 
 function checkUsers() {
     $("#buttonsHere").children().remove();
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\">Back to Edit</button></a>");
+    $("#title").remove();
+    $("#titleHere").append("<h1  id=\"title\"> Users: </h1>");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
     $("#users").hide();
     $.ajax({
         url: "/user",
         type: "GET",
         dataType: "json",
         success: function(data) {
-            $("#bases").append("<h1> Users: </h1>");
             for (i=0;i<data.length;i++) {
-                $("#bases").append("<div>"+"<p>"+"id: " + data[i].id+"</p>"+"<p>"+"username: " + data[i].username+"</p>"+"<p>"+"password: " + data[i].password+"</p>"+"<p>"+"role: " + data[i].role.name+"</p>"+"</div>");
+                $("#bases").append(
+                    "<div>"+
+                    "<p><h2>"+"id/username: " + data[i].id+" / "+data[i].username+"</h2></p>"+
+                    "<p>"+"password: " + data[i].password+"</p>"+
+                    "<p>"+"role: " + data[i].role.name+"</p>"+
+                    "<p>"+"authorities: " + JSON.stringify(data[i].authorities)+"</p>"+
+                    "</div><br/>");
             }
         },
         error: getErrorMsg
@@ -159,37 +166,87 @@ function checkUsers() {
 
 function checkRecipes() {
     $("#buttonsHere").children().remove();
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\">Back to Edit</button></a>");
+    $("#title").remove();
+    $("#titleHere").append("<h1 id=\"title\"> Recipes: </h1>");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
     $("#users").hide();
     $.ajax({
         url: "/recipe",
         type: "GET",
         dataType: "json",
         success: function(data) {
-            $("#bases").append("<h1> Recipes: </h1>");
+            for (i=0;i<data.length;i++) {
+                var htmlString =
+                    "<div>"+
+                    "<p><h2>"+ "id/name: "+data[i].id+ " / "+ data[i].name+ "</h2></p>"+
+                    "<p>"+ "description: "+data[i].description+ "</p>"+
+                    "<p>"+ "category: "+JSON.stringify(data[i].category, null, "\t")+ "</p>"+
+                    "<p>"+ "user: "+JSON.stringify(data[i].user, null, "\t")+ "</p>"+
+                    "<p>"+ "prepTime: "+data[i].prepTime+ "</p>"+
+                    "<p>"+ "cookTime: "+data[i].cookTime+ "</p>";
+
+                if (data[i].photo != null && data[i].photo.length>0) {
+                    htmlString += "<p>photo: detected</p>";
+                } else {
+                    htmlString += "<p>photo: n/a</p>";
+                }
+
+                if (data[i].favoriteUsers != null && data[i].favoriteUsers.length>0) {
+                    htmlString += "<p>favoriteUsers: ";
+                    for (j=0;j<data[i].favoriteUsers.length;j++) {
+                        htmlString += JSON.stringify(data[i].favoriteUsers[j], null, "\t");
+                    }
+                    htmlString += "</p>";
+                } else {
+                    htmlString += "<p>favoriteUsers: null</p>";
+                }
+
+                if (data[i].ingredients != null && data[i].ingredients.length>0) {
+                    htmlString += "<p>ingredients: ";
+                    for (j=0;j<data[i].ingredients.length;j++) {
+                        htmlString += JSON.stringify(data[i].ingredients[j], null, "\t");
+                    }
+                    htmlString += "</p>";
+                } else {
+                    htmlString += "<p>ingredients: null</p>";
+                }
+
+                if (data[i].steps != null && data[i].steps.length>0) {
+                    htmlString += "<p>steps: ";
+                    for (j=0;j<data[i].steps.length;j++) {
+                        htmlString += data[i].steps[j]+"; ";
+                    }
+                    htmlString += "</p>";
+                } else {
+                    htmlString += "<p>steps: null</p>";
+                }
+
+                htmlString += "</div><br/>";
+
+                $("#bases").append(htmlString);
+            }
+        },
+        error: getErrorMsg
+    });
+}
+
+function checkCategories() {
+    $("#buttonsHere").children().remove();
+    $("#title").remove();
+    $("#titleHere").append("<h1  id=\"title\"> Categories: </h1>");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
+    $("#users").hide();
+    $.ajax({
+        url: "/category",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
             for (i=0;i<data.length;i++) {
                 $("#bases").append(
                     "<div>"+
-                    "<p>"+
-                    "id:"+data[i].id+
-                    "</p>"+
-                    "<p>"+
-                    "name:"+data[i].name+
-                    "</p>"+
-                    "<p>"+
-                    "description:"+data[i].description+
-                    "</p>"+
-                    "<p>"+
-                    "category:"+data[i].category.name+
-                    "</p>"+
-                    "<p>"+
-                    "prepTime:"+data[i].prepTime+
-                    "</p>"+
-                    "<p>"+
-                    "cookTime:"+data[i].cookTime+
-                    "</p>"+
-
-                                                "</div>");
+                    "<p><h2>"+"id/name: " + data[i].id+" / "+data[i].name+"</h2></p>"+
+                    "<p>"+"recipes: " + JSON.stringify(data[i].recipes)+"</p>"+
+                    "</div><br/>");
             }
         },
         error: getErrorMsg
@@ -197,9 +254,12 @@ function checkRecipes() {
 }
 
 function backToEdit() {
+    $("#title").remove();
+    $("#titleHere").append("<h1  id=\"title\"> Admin Panel </h1>");
     $("#buttonsHere").children().remove();
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkRecipesButton\" type=\"button\" onclick=\"checkRecipes()\">Check Recipes</button></a> ");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkUsersButton\" type=\"button\" onclick=\"checkUsers()\">Check Users</button></a> ");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkCategoriesButton\" type=\"button\" onclick=\"checkCategories()\" class=\"secondary\">Check Categories</button></a> ");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkRecipesButton\" type=\"button\" onclick=\"checkRecipes()\" class=\"secondary\">Check Recipes</button></a> ");
+    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkUsersButton\" type=\"button\" onclick=\"checkUsers()\" class=\"secondary\">Check Users</button></a> ");
     $("#buttonsHere").append("<a href=\"#\"><button id=\"addUserButton\" type=\"button\" onclick=\"addUser()\">Add User</button></a>");
     $("#users").show();
     $("#bases").children().remove();
