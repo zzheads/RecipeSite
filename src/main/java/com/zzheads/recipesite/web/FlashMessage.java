@@ -1,8 +1,11 @@
 package com.zzheads.recipesite.web;
 
+import com.google.gson.Gson;
+
 public class FlashMessage {
     private String message;
     private Status status;
+    private Gson gson = new Gson();
 
     public FlashMessage(String message, Status status) {
         this.message = message;
@@ -29,5 +32,9 @@ public class FlashMessage {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String toJson () {
+        return gson.toJson(this);
     }
 }

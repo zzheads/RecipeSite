@@ -9,8 +9,11 @@ import com.zzheads.recipesite.utils.HexEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 
@@ -35,11 +38,28 @@ public class RecipeApi {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public String getCurrentUsername () {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        return username;
+    }
+
     @RequestMapping(value = "/recipe", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
     String addRecipe(@RequestBody String jsonString) {
         Recipe recipe = Recipe.fromJson(jsonString);
+        recipe.setUser(getLoggedUser());
+        if (recipe.getCategory() != null)
+            recipe.setCategory(categoryService.findByName(recipe.getCategory().getName()));
+        recipe.setFavoriteUsers(recipeService.findById(recipe.getId()).getFavoriteUsers());
+        recipe.setPhoto(recipeService.findById(recipe.getId()).getPhoto());
+
         recipeService.save(recipe);
         return recipe.toJson();
     }
@@ -114,8 +134,13 @@ public class RecipeApi {
 
     @RequestMapping(value = "/recipe/{id}", method = RequestMethod.DELETE, produces = {"application/json"})
     @ResponseStatus (HttpStatus.NO_CONTENT)
-    public void deleteRecipeById(@PathVariable Long id) {
+    public void deleteRecipeById(@PathVariable Long id, RedirectAttributes attributes) {
         Recipe recipe = recipeService.findById(id);
+
+        if (recipe.getCategory() != null) {
+            recipe.getCategory().removeRecipe(recipe);
+            categoryService.save(recipe.getCategory());
+        }
         recipeService.delete(recipe);
     }
 

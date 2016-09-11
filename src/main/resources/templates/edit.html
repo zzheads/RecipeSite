@@ -31,7 +31,7 @@
                         </div>
                         <div class="grid-50">
                             <div class="flush-right">
-                                <button type="submit">Save Recipe</button>
+                                <button type="button" onclick="saveRecipe()">Save Recipe</button>
                                 <a href="/"><button type="button" class="secondary">Cancel</button></a>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                         </div>
                     </div><div class="clear"></div>
 
-                    <div class="grid-100 row">
+                    <div id="ingredientRow" class="grid-100 row">
                         <div class="grid-20">
                             <p class="label-spacing">
                                 <label> Ingredients </label>

@@ -9,8 +9,12 @@
     <div th:replace="layout :: logo"></div>
       <div th:replace="layout :: flash"></div>
 
-    <div class="grid-100">
+    <div id="root" class="grid-100">
         <p id="loggedUser" hidden="hidden" th:text="${user.username}"></p>
+        <p id="loggedUserRole" hidden="hidden" th:text="${user.role}"></p>
+        <div id="categoriesHere">
+            <p th:each="category, stat : ${allCategories}" th:id="@{'getCategoryNameById' + ${category.id}}" th:text="${category.name}" hidden="hidden"></p>
+        </div>
 
         <div class="grid-100 row controls">
             <div class="grid-30">
@@ -18,7 +22,7 @@
                     <option th:each="category : ${allCategories}" th:if="${category.id} != ${selectedCategory.id}" th:value="${category.id}" th:text="${category.name}">All Categories</option>
                     <option th:each="category : ${allCategories}" th:if="${category.id} == ${selectedCategory.id}" th:value="${category.id}" th:text="${category.name}" selected="selected">All Categories</option>
                 </select>
-                <p th:each="category, stat : ${allCategories}" th:id="@{'getCategoryNameById' + ${category.id}}" th:text="${category.name}" hidden="hidden"></p>
+
             </div>
             <div class="grid-30" id="search-form">
                 <input type="text" id="searchRecipe" name="q" autocomplete="off" th:value="${pattern}" oninput="linkToPattern()"/>
@@ -47,7 +51,7 @@
                 </div> <div class="clear"></div>
 
                 <div id="recipesList">
-                    <div th:each="recipe, stat : ${recipes}" class="grid-100 row addHover">
+                    <div th:id="@{'recipe#' + ${recipe.id}}" th:each="recipe, stat : ${recipes}" class="grid-100 row addHover">
                         <a th:href="@{'/detail/' + ${recipe.id}}">
                             <div class="grid-70">
                                 <p th:inline="text">
@@ -61,8 +65,9 @@
                             <div class="grid-30">
                                 <div class="flush-right">
                                     <p>
-                                        <a th:href="@{'/edit/' + ${recipe.id}}" class="button"><img src="../assets/images/edit.svg" height="12px"/>Edit</a>
-                                        <a th:href="@{'/delete/' + ${recipe.id}}" class="button"><img src="../assets/images/delete.svg" height="12px"/>Delete</a>
+                                        <a th:id="@{'editButton#' + ${recipe.id}}" href="#" class="button" onclick="editRecipe(this.id)"><img src="../assets/images/edit.svg" height="12px"/>Edit</a>
+                                        <a th:id="@{'deleteButton#' + ${recipe.id}}" href="#" class="button" onclick="deleteRecipe(this.id)"><img src="../assets/images/delete.svg" height="12px"/>Delete</a>
+                                        <p th:id="@{'recipeUser#' + ${recipe.id}}" th:text="${recipe.user.username}" hidden="hidden"/>
                                     </p>
                                 </div>
                             </div>

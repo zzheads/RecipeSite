@@ -3,7 +3,6 @@ package com.zzheads.recipesite.web.api;
 import com.zzheads.recipesite.model.Recipe;
 import com.zzheads.recipesite.service.RecipeService;
 import com.zzheads.recipesite.utils.NoPhoto;
-import com.zzheads.recipesite.web.FlashMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 /**
  * Created by alexeypapin on 07.09.16.
@@ -47,8 +44,8 @@ public class FileApi {
         return null;
     }
 
-    @RequestMapping(value="/photos/{recipeId}.{ext}", method=RequestMethod.GET)
-    public @ResponseBody byte[] getPhoto(@PathVariable Long recipeId, @PathVariable String ext) throws IOException {
+    @RequestMapping(value="/photos/{recipeId}", method=RequestMethod.GET)
+    public @ResponseBody byte[] getPhoto(@PathVariable Long recipeId) throws IOException {
         byte[] photo = recipeService.findById(recipeId).getPhoto();
         if (photo == null)
             return NO_PHOTO.getIMAGE();

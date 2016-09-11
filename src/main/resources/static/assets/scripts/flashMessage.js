@@ -16,3 +16,8 @@ function printFlashMessage (message, status) {
 function clearFlash() {
     $("#flashMessage").children().remove();
 }
+
+function getErrorMsg (jqXHR, textStatus, errorThrown) {
+    clearFlash();
+    printFlashMessage(jqXHR.responseText, "failure");
+}

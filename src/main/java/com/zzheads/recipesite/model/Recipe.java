@@ -1,26 +1,17 @@
 package com.zzheads.recipesite.model;//
 
 import com.google.gson.*;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.data.jpa.repository.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import java.lang.reflect.*;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 // RecipeSite
@@ -326,10 +317,20 @@ public class Recipe {
                 }
                 result.add("favoriteUsers", jsonFavUsers);
             }
-            if (src.getCategory()!=null) result.addProperty("category", src.getCategory().getName());
+            if (src.getCategory()!=null) {
+                JsonObject jsonCategory = new JsonObject();
+                jsonCategory.addProperty("id", src.getCategory().getId());
+                jsonCategory.addProperty("name", src.getCategory().getName());
+                result.add("category", jsonCategory);
+            }
             if (src.getPrepTime()!=null) result.addProperty("prepTime", dateToString(src.getPrepTime()));
             if (src.getCookTime()!=null) result.addProperty("cookTime", dateToString(src.getCookTime()));
-            if (src.getUser()!=null) result.addProperty("user", src.getUser().getUsername());
+            if (src.getUser()!=null) {
+                JsonObject jsonUser = new JsonObject();
+                jsonUser.addProperty("id", src.getUser().getId());
+                jsonUser.addProperty("username", src.getUser().getUsername());
+                result.add("user", jsonUser);
+            }
             if (src.getIngredients()!=null && src.getIngredients().size()>0) {
                 JsonArray jsonIngredients = new JsonArray();
                 for (int i=0; i<src.getIngredients().size(); i++) {
@@ -383,14 +384,20 @@ public class Recipe {
                     result.addFavorite(new User(je.getAsJsonPrimitive().getAsString()));
                 }
             }
-            if (object.get("category") != null) result.setCategory(new Category(object.get("category").getAsString()));
+            if (object.get("category") != null) {
+                JsonObject jc = object.get("category").getAsJsonObject();
+                result.setCategory(new Category(jc.get("id").getAsLong(), jc.get("name").getAsString()));
+            }
             try {
                 result.setPrepTime(stringToDate(object.get("prepTime").getAsString()));
                 result.setCookTime(stringToDate(object.get("cookTime").getAsString()));
             } catch (Exception ignored) {
 
             }
-            if (object.get("user") != null) result.setUser(new User(object.get("user").getAsString()));
+            if (object.get("user") != null) {
+                JsonObject ju = object.get("user").getAsJsonObject();
+                result.setUser(new User(ju.get("username").getAsString()));
+            }
 
             if (object.get("ingredients")!=null) {
                 JsonArray ingredients = object.get("ingredients").getAsJsonArray();

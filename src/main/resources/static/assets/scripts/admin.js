@@ -134,11 +134,6 @@ function saveUser(buttonId) {
     });
 }
 
-function getErrorMsg (jqXHR, textStatus, errorThrown) {
-    clearFlash();
-    printFlashMessage(jqXHR.responseText, "failure");
-}
-
 function checkUsers() {
     $("#buttonsHere").children().remove();
     $("#title").remove();

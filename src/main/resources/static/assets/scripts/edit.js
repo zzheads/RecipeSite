@@ -34,7 +34,7 @@ function addStep () {
 
 function getRecipe () {
     var recipe = {
-        id : document.getElementById("recipeId").innerText,
+        id : parseInt(document.getElementById("recipeId").innerText),
         name: document.getElementById("recipeName").value,
         description : document.getElementById("recipeDescription").value,
         category : getCategoryName(document.getElementById("recipeCategory").value),
@@ -142,4 +142,31 @@ function openImageWindow(src) {
     var width = image.width;
     var height = image.height;
     window.open(src,"Image","width=" + width + ",height=" + height);
+}
+
+function saveRecipe () {
+
+    // $("body").bind("ajaxSend", function(elm, xhr, s){
+    //     if (s.type == "POST") {
+    //         xhr.setRequestHeader('X-CSRF-Token', token);
+    //     }
+    // });
+
+    var recipe = getRecipe();
+    console.log(recipe);
+
+    $.ajax({
+        url: "/recipe",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
+        data: JSON.stringify(recipe, null, "\t"),
+        success: function(data) {
+            console.log(data);
+            clearFlash();
+            printFlashMessage("Recipe \""+data.name+"\" (id="+data.id+") saved.", "success");
+        },
+        error : getErrorMsg
+    });
 }
