@@ -5,16 +5,18 @@
   <nav th:replace="layout :: nav"></nav>
 
   <div class="grid-container">
-
-    <div th:replace="layout :: logo"></div>
+      <div th:replace="layout :: logo"></div>
       <div th:replace="layout :: flash"></div>
 
+      <div id="hiddenPlaceToStoreSomeVars">
+          <p id="loggedUser" hidden="hidden" th:text="${user.username}"></p>
+          <p id="loggedUserRole" hidden="hidden" th:text="${user.role.name}"></p>
+          <div id="categoriesHere">
+              <p th:each="category, stat : ${allCategories}" th:id="@{'getCategoryNameById' + ${category.id}}" th:text="${category.name}" hidden="hidden"></p>
+          </div>
+      </div>
+
     <div id="root" class="grid-100">
-        <p id="loggedUser" hidden="hidden" th:text="${user.username}"></p>
-        <p id="loggedUserRole" hidden="hidden" th:text="${user.role}"></p>
-        <div id="categoriesHere">
-            <p th:each="category, stat : ${allCategories}" th:id="@{'getCategoryNameById' + ${category.id}}" th:text="${category.name}" hidden="hidden"></p>
-        </div>
 
         <div class="grid-100 row controls">
             <div class="grid-30">
@@ -84,6 +86,8 @@
   </div> <!-- grid-container -->
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
   <script src="../assets/scripts/flashMessage.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../assets/scripts/layout.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../assets/scripts/recipe.js" type="text/javascript" charset="utf-8"></script>
   <script src="../assets/scripts/index.js" type="text/javascript" charset="utf-8"></script>
 </body>
 <div th:replace="layout :: footer"></div>
