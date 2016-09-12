@@ -75,6 +75,7 @@ function addUser() {
         url: "/user",
         type: "POST",
         dataType: "json",
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
         data: JSON.stringify(newUser, null, "\t"),
         success: function (data) {
             console.log(data);
@@ -123,6 +124,7 @@ function saveUser(buttonId) {
         type: "PUT",
         dataType: "json",
         contentType: "application/json",
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
         data: JSON.stringify(user),
         success: function (data) {
             document.getElementById("user#"+user.id).remove();
@@ -235,6 +237,7 @@ function checkCategories() {
         url: "/category",
         type: "GET",
         dataType: "json",
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
         success: function(data) {
             for (i=0;i<data.length;i++) {
                 $("#bases").append(

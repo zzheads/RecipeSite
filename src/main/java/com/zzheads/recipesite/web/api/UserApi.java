@@ -67,6 +67,7 @@ public class UserApi {
 
         User user = userService.findById(id);
         user.setProperties(updatingUser);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return user.toJson();
     }

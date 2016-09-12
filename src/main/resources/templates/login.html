@@ -21,10 +21,13 @@
                     <p><input th:field="*{password}" placeholder="Password" type="password"/></p>
                   </div>
                   <div class="clear"></div>
-                    <div class="prefix-30 grid-20">
-                        <a href="/signup"><button type="button" class="secondary">SignUp</button></a>
+                    <div class="prefix-30 grid-10">
+                        <button type="button" class="secondary" onclick="adminPanel()">Admin</button>
                     </div>
-                    <div class="grid-20 suffix-30">
+                    <div class="prefix-5 grid-10 suffix-5">
+                        <a href="#"><button type="button" class="secondary">SignUp</button></a>
+                    </div>
+                    <div class="grid-10 suffix-30">
                         <button type="submit">Login</button>
                     </div>
                   <div class="clear"></div>
@@ -37,6 +40,7 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <script src="../assets/scripts/flashMessage.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/login.js" type="text/javascript" charset="utf-8"></script>
 </body>
 <div th:replace="layout :: footer"></div>
 </html>
