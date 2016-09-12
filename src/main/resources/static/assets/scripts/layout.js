@@ -4,12 +4,12 @@ function getEditRecipeHtmlString(allCategories, recipe) {
         "<div class='recipes'>" +
         "<input type='hidden' id='recipeIdInput' field='" + recipe.id + "' value='" + recipe.id + "'/>";
 
-
-    for (i = 0; i < recipe.favoriteUsers.length; i++) {
-        htmlString += "<div hidden=\"hidden\">";
-        htmlString += "<input hidden=\"hidden\" id=\"favUser\"" + i + "\" value=\"" + recipe.favoriteUsers[i].username + "\"/>";
-        htmlString += "</div>";
-    }
+    if (recipe.favoriteUsers!=null)
+        for (i = 0; i < recipe.favoriteUsers.length; i++) {
+            htmlString += "<div hidden=\"hidden\">";
+            htmlString += "<input hidden=\"hidden\" id=\"favUser\"" + i + "\" value=\"" + recipe.favoriteUsers[i].username + "\"/>";
+            htmlString += "</div>";
+        }
 
     htmlString += "<p hidden=\"hidden\" id=\"recipeId\">"+recipe.id+"</p>";
     htmlString += "<p hidden=\"hidden\" id=\"recipeUserName\">"+recipe.user.username+"</p>";
@@ -300,7 +300,7 @@ function getNavBarHtmlString (allCategories) {
     htmlString += "</div>";
     htmlString += "<div class='grid-20'>";
     htmlString += "<div class='flush-right'>";
-    htmlString += "<a href='#' onclick='addRecipe()'><button>Add Recipe</button></a>";
+    htmlString += "<button type='button' onclick='addNewRecipe()'>Add Recipe</button>";
     htmlString += "</div>";
     htmlString += "</div>";
     htmlString += "</div>";

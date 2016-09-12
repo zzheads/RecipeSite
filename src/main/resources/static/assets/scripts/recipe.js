@@ -2,6 +2,10 @@ function getRecipeId () {
     return parseInt(document.getElementById("recipeIdInput").value);
 }
 
+function updateRecipeId (newId) {
+    document.getElementById("recipeIdInput").value = newId;
+}
+
 function getRecipeName () {
     var value = document.getElementById("recipeName").value;
     var placeholder = document.getElementById("recipeName").placeholder;
@@ -98,6 +102,8 @@ function getRecipeAnyArray (elementCheck, functionGet) {
 }
 
 function isFavorite(recipe, loggedUser) {
+    if (recipe.favoriteUsers == null)
+        return false;
     for (i=0;i<recipe.favoriteUsers.length;i++) {
         if (recipe.favoriteUsers[i].id == loggedUser.id)
             return true;
@@ -117,5 +123,23 @@ function getRecipe () {
         ingredients: getRecipeAnyArray("recipeIngredient", getRecipeIngredient),
         steps: getRecipeAnyArray("recipeStep", getRecipeStep),
         favoriteUsers: getRecipeAnyArray("favUser", getFavUser)
+    };
+}
+
+function getNewRecipe () {
+    return {
+        id: 0,
+        name: "",
+        description : "",
+        category : {
+            id: 0,
+            name: "Unassigned"
+        },
+        prepTime: "",
+        cookTime: "",
+        user: getLoggedUser(),
+        ingredients: [],
+        steps: [],
+        favoriteUsers: []
     };
 }

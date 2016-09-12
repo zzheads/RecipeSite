@@ -57,9 +57,7 @@ public class RecipeApi {
         recipe.setUser(getLoggedUser());
         if (recipe.getCategory() != null)
             recipe.setCategory(categoryService.findByName(recipe.getCategory().getName()));
-        recipe.setFavoriteUsers(recipeService.findById(recipe.getId()).getFavoriteUsers());
-        recipe.setPhoto(recipeService.findById(recipe.getId()).getPhoto());
-
+        recipe.setId(null);
         recipeService.save(recipe);
         return recipe.toJson();
     }

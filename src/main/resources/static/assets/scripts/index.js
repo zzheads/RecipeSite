@@ -291,3 +291,32 @@ function saveRecipe () {
         error: getErrorMsg
     });
 }
+
+function addNewRecipe () {
+    var newRecipe = getNewRecipe();
+
+    $.ajax({
+        url: "/recipe",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(newRecipe, null, "\t"),
+        contentType: "application/json",
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
+        success: function (data) {
+            newRecipe = data;
+            $.ajax({
+                url: "/category/",
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
+                success: function (data) {
+                    var allCategories = data;
+                    toEditMode(allCategories, newRecipe);
+                },
+                error: getErrorMsg
+            });
+        },
+        error: getErrorMsg
+    });
+}
