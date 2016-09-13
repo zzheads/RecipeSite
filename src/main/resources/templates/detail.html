@@ -22,8 +22,8 @@
 
         <div class="grid-50">
           <h2 class="flush-right" id="picHere">
-            <img id="favoritedSvg" th:if="${recipeFavorite} == true" src="../assets/images/favorited.svg" height="16px" onclick="toggleFavorite()"/>
-            <img id="favoriteSvg" th:if="${recipeFavorite} != true" src="../assets/images/favorite.svg" height="16px" onclick="toggleFavorite()"/>
+            <img id="favoritedSvg" th:if="${recipeFavorite} == true" src="../assets/images/favorited.svg" height="16px"/>
+            <img id="favoriteSvg" th:if="${recipeFavorite} != true" src="../assets/images/favorite.svg" height="16px"/>
           </h2>
         </div>
       </div><div class="clear"></div>
@@ -195,7 +195,8 @@
 </div> <!-- grid-container -->
 
 <script src="../assets/vendor/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../assets/scripts/toggleFavorite.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/recipe.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/index.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/openImageWindow.js" type="text/javascript" charset="utf-8"></script>
 </body>
 <div th:replace="layout :: footer"></div>

@@ -41,6 +41,21 @@ function getMethod () {
     }
 }
 
+function getAllCategories () {
+    var index = 0;
+    var allCategories = [];
+    while (true) {
+        if (document.getElementById("allCategoriesName"+index) == null)
+            break;
+        allCategories.push({
+            id: document.getElementById("allCategoriesId"+index).innerText,
+            name: document.getElementById("allCategoriesName"+index).innerText
+        });
+        index++;
+    }
+    return allCategories;
+}
+
 function linkToSelectedCategory () {
     var selectedCategory = getSelectedCategory();
     console.log("Select category changed, starting searching recipes by category with id: " + selectedCategory);
@@ -172,14 +187,14 @@ function addIngredient () {
     }
     recipe.ingredients.push(newIngredient);
     $("#ingredientRows").children().remove();
-    $("#ingredientRows").append(ingredientRow(recipe));
+    $("#ingredientRows").append(getIngredientsRowsHtmlString(recipe));
 }
 
 function deleteIngredient (row) {
     var recipe = getRecipe();
     recipe.ingredients.splice(row, 1);
     $("#ingredientRows").children().remove();
-    $("#ingredientRows").append(ingredientRow(recipe));
+    $("#ingredientRows").append(getIngredientsRowsHtmlString(recipe));
 }
 
 function addStep () {
@@ -189,14 +204,14 @@ function addStep () {
     }
     recipe.steps.push("");
     $("#stepsRows").children().remove();
-    $("#stepsRows").append(stepsRow(recipe));
+    $("#stepsRows").append(getStepsRowsHtmlString(recipe));
 }
 
 function deleteStep (row) {
     var recipe = getRecipe();
     recipe.steps.splice(row, 1);
     $("#stepsRows").children().remove();
-    $("#stepsRows").append(stepsRow(recipe));
+    $("#stepsRows").append(getStepsRowsHtmlString(recipe));
 }
 
 function toggleFavorite () {
@@ -218,6 +233,42 @@ function toggleFavorite () {
 function updateFavoriteUsers (recipe) {
     $("#favoriteUsers").children().remove();
     $("#favoriteUsers").append(getFavoriteUsersHtmlString(recipe));
+}
+
+function addNewCategory () {
+    var newCategory = {
+        name: document.getElementById("newCategoryNameInput").value
+    };
+    var allCategories = getAllCategories();
+    var recipe = getRecipe();
+    console.log("Adding new category with name:"+newCategory.name);
+    // Check there is no category with same name
+    for (var i=0;i<allCategories.length;i++) {
+        if (allCategories[i].name == newCategory.name) {
+            clearFlash();
+            printFlashMessage("Can't add new category, there is with same name already.", "failure");
+            return;
+        }
+    }
+
+    $.ajax({
+        url: "/category",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(newCategory, null, "\t"),
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
+        success: function (data) {
+            newCategory = data;
+            allCategories.push(newCategory);
+            // update select with new category
+            $("#selectCategoryRow").children().remove();
+            $("#selectCategoryRow").append(getSelectCategoryRowHtmlString(allCategories, recipe));
+            clearFlash();
+            printFlashMessage("New category (name='"+data.name+"', id="+data.id+") successfully added.", "success");
+        },
+        error: getErrorMsg
+    });
 }
 
 function uploadPhoto () {

@@ -80,33 +80,8 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     htmlString += "</div>";
     htmlString += "</div><div class=\"clear\"></div>";
 
-    htmlString += "<div class=\"grid-100 row\">";
-    htmlString += "<div class=\"grid-20\">";
-    htmlString += "<p class=\"label-spacing\">";
-    htmlString += "<label> Category </label>";
-    htmlString += "</p>";
-    htmlString += "</div>";
-    htmlString += "<div class=\"grid-30\">";
-    htmlString += "<p>";
-
-    var catString = "<select id='recipeCategory' field='" + recipe.category.id + "' value='"+recipe.category.id+"' onchange='changeSelectedCategory()'>";
-
-    for (i = 0; i < allCategories.length; i++) {
-        if (recipe.category.id != parseInt(allCategories[i].id)) {
-            catString += "<option value=\"" + parseInt(allCategories[i].id) + "\">" + allCategories[i].name + "</option>";
-        } else {
-            catString += "<option value=\"" + parseInt(allCategories[i].id) + "\" selected='selected'>" + allCategories[i].name + "</option>";
-        }
-        catString += "<p id=\"getCategoryNameById" + allCategories[i].id + "\" text=\"" + allCategories[i].name + "\" hidden=\"hidden\"></p>";
-    }
-
-    catString += "</select>";
-    console.log(catString);
-    htmlString+=catString;
-
-
-    htmlString += "</p>";
-    htmlString += "</div>";
+    htmlString += "<div id='selectCategoryRow' class=\"grid-100 row\">";
+    htmlString += getSelectCategoryRowHtmlString(allCategories, recipe);
     htmlString += "</div><div class='clear'></div>";
 
     htmlString += "<div class=\"grid-100 row\">";
@@ -148,6 +123,47 @@ function getEditRecipeHtmlString(allCategories, recipe) {
 
     htmlString += "<div class=\"row\">&nbsp;</div>";
 
+    htmlString += "</div>";
+
+    return htmlString;
+}
+
+function getSelectCategoryRowHtmlString (allCategories, recipe) {
+    var
+    htmlString = "<div class=\"grid-20\">";
+    htmlString += "<p class=\"label-spacing\">";
+    htmlString += "<label> Category </label>";
+    htmlString += "</p>";
+    htmlString += "</div>";
+    htmlString += "<div class=\"grid-30\">";
+    htmlString += "<p>";
+    htmlString += "<select id='recipeCategory' field='" + recipe.category.id + "' value='" + recipe.category.id + "' onchange='changeSelectedCategory()'>";
+    for (var i = 0; i < allCategories.length; i++) {
+        if (recipe.category.id != parseInt(allCategories[i].id)) {
+            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\">" + allCategories[i].name + "</option>";
+        } else {
+            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\" selected='selected'>" + allCategories[i].name + "</option>";
+        }
+    }
+    htmlString += "</select>";
+    for (var i = 0; i < allCategories.length; i++) {
+        htmlString += "<p id='allCategoriesId"+i+"' hidden='hidden'>"+allCategories[i].id+"</p>";
+        htmlString += "<p id='allCategoriesName"+i+"' hidden='hidden'>"+allCategories[i].name+"</p>";
+        htmlString += "<p id=\"getCategoryNameById" + allCategories[i].id + "\" text=\"" + allCategories[i].name + "\" hidden='hidden'></p>";
+    }
+
+    htmlString += "</p>";
+    htmlString += "</div>";
+
+    htmlString += "<div class=\"prefix-20 grid-30\">";
+    htmlString += "<div class=\"flash-right\">";
+    htmlString += "<p>";
+    htmlString += "<input id='newCategoryNameInput' type='text' placeholder='New Category Name'/>";
+    htmlString += "</p>";
+    htmlString += "<p>";
+    htmlString += "<button type='button' class='secondary' onclick='addNewCategory()'>Add</button>"
+    htmlString += "</p>";
+    htmlString += "</div>";
     htmlString += "</div>";
 
     return htmlString;

@@ -4,9 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.io.File;
-import java.io.IOException;
-
 // DONE:		Create model classes, DAO interfaces, services, and add unit tests to components. Determine test coverage using a code coverage tool and ensure your tests cover of at least 60% of your code.
 // DONE:		Using the supplied files, create the template for the recipe list page. Use the following requirements list to ensure all functionality is included in the recipe list page.
 // DONE:		Recipes
@@ -27,7 +24,7 @@ import java.io.IOException;
 // DONE:		Any user can add the recipe to their favorites
 // DONE:		The recipe list page should have a search feature. A user can enter a search term and the recipe list will display results that have the search phrase in the description.
 // DONE:		Enable user authentication with Spring Security. Use the supplied files to create templates for login page, registration page, and profile page. You must built the registration component, as it does not come with Spring Security. Create necessary controllers, services, and DAO to add a new user. Make sure to include validation so that a user may not use a username that already exists. Check out links in external resources if you get stuck.
-// DONE		Create REST endpoints for CRUD operations.
+// DONE			Create REST endpoints for CRUD operations.
 // DONE:		Ensure data is persisted using Hibernate and any database provider of your choice.
 
 // DONE:		Add the ability to search by ingredient. Enable a user to choose to search by ingredient or description by providing a dropdown box next to the search input

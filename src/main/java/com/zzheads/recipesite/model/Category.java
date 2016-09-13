@@ -116,9 +116,14 @@ public class Category {
         @Override
         public Category deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            Long id = jsonObject.get("id").getAsLong();
+            Category result;
             String name = jsonObject.get("name").getAsString();
-            Category result = new Category(id, name);
+            if (jsonObject.get("id") != null) {
+                Long id = jsonObject.get("id").getAsLong();
+                result = new Category(id, name);
+            } else {
+                result = new Category(name);
+            }
             if (jsonObject.get("recipes")!=null) {
                 JsonArray jsonRecipes = jsonObject.get("recipes").getAsJsonArray();
                 for (JsonElement j : jsonRecipes) {

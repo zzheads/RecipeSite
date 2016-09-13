@@ -96,6 +96,8 @@ function deleteUser(buttonId) {
         url: "/user/"+id,
         type: "DELETE",
         dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
         success: function () {
             clearFlash();
             printFlashMessage("User (id="+id+") deleted.", "success");
@@ -146,6 +148,8 @@ function checkUsers() {
         url: "/user",
         type: "GET",
         dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
         success: function(data) {
             for (i=0;i<data.length;i++) {
                 $("#bases").append(
@@ -171,6 +175,8 @@ function checkRecipes() {
         url: "/recipe",
         type: "GET",
         dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
         success: function(data) {
             for (i=0;i<data.length;i++) {
                 var htmlString =
@@ -241,11 +247,39 @@ function checkCategories() {
         success: function(data) {
             for (i=0;i<data.length;i++) {
                 $("#bases").append(
-                    "<div>"+
-                    "<p><h2>"+"id/name: " + data[i].id+" / "+data[i].name+"</h2></p>"+
-                    "<p>"+"recipes: " + JSON.stringify(data[i].recipes)+"</p>"+
-                    "</div><br/>");
+                    "<div id='category#"+i+"' class='grid-100 row'>"+
+                        "<div class='grid-80'>"+
+                            "<p><h2>"+"id/name: " + data[i].id+" / "+data[i].name+"</h2></p>"+
+                            "<p>"+"recipes: " + JSON.stringify(data[i].recipes)+"</p>"+
+                        "</div>"+
+                        "<div class='grid-20'>"+
+                            "<p class='label-spacing flush-right'>"+
+                                "<a href='#' id='buttonDelete#"+i+"' onclick='deleteCategory(this.id)'><img src='../assets/images/delete.svg' height='12px'/> Delete</a>"+
+                            "</p>"+
+                        "</div>"+
+                        "<div class='clear'></div>"+
+                    "</div>"
+                );
             }
+        },
+        error: getErrorMsg
+    });
+}
+
+function deleteCategory (buttonId) {
+    var id = buttonId.split('#').pop();
+    console.log("Deleting user (id=" + id + ").");
+
+    $.ajax({
+        url: "/category/"+id,
+        type: "DELETE",
+        dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
+        success: function () {
+            clearFlash();
+            printFlashMessage("Category (id="+id+") deleted.", "success");
+            document.getElementById("category#"+id).remove();
         },
         error: getErrorMsg
     });
