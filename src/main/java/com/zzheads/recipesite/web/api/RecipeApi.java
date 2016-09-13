@@ -5,7 +5,6 @@ import com.zzheads.recipesite.model.User;
 import com.zzheads.recipesite.service.CategoryService;
 import com.zzheads.recipesite.service.RecipeService;
 import com.zzheads.recipesite.service.UserService;
-import com.zzheads.recipesite.utils.HexEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -91,34 +90,18 @@ public class RecipeApi {
     @ResponseStatus (HttpStatus.OK)
     public @ResponseBody String updateRecipe(@RequestBody String jsonString, @PathVariable Long id) {
         Recipe updatingRecipe = Recipe.fromJson(jsonString);
+        if (updatingRecipe.getFavoriteUsers()!=null) {
+            for (int i=0;i<updatingRecipe.getFavoriteUsers().size();i++) {
+                User userWithOnlyUsername = updatingRecipe.getFavoriteUsers().get(i);
+                User userWithProperties = userService.findByUsername(userWithOnlyUsername.getUsername());
+                updatingRecipe.removeFavorite(userWithOnlyUsername);
+                updatingRecipe.addFavorite(userWithProperties);
+            }
+        }
+        updatingRecipe.setUser(userService.findByUsername(updatingRecipe.getUser().getUsername()));
+        updatingRecipe.setPhoto(recipeService.findById(id).getPhoto());
         Recipe recipe = recipeService.findById(id);
         recipe.setProperties(updatingRecipe);
-        recipeService.save(recipe);
-        return recipe.toJson();
-    }
-
-    @RequestMapping(value = "/recipe_addingredient/{id}", method = RequestMethod.POST, produces = {"application/json"})
-    @ResponseStatus (HttpStatus.OK)
-    public @ResponseBody String addIngredientToRecipe(@RequestBody String jsonString, @PathVariable Long id) {
-        HexEncoder encoded = new HexEncoder(jsonString);
-        Recipe updatingRecipe = Recipe.fromJson(encoded.getDecoded());
-        updatingRecipe.setCategory(categoryService.findByName(updatingRecipe.getCategory().getName()));
-        Recipe recipe = recipeService.findById(id);
-        recipe.setProperties(updatingRecipe);
-        recipe.addIngredient("", "", 0);
-        recipeService.save(recipe);
-        return recipe.toJson();
-    }
-
-    @RequestMapping(value = "/recipe_addstep/{id}", method = RequestMethod.POST, produces = {"application/json"})
-    @ResponseStatus (HttpStatus.OK)
-    public @ResponseBody String addStepToRecipe(@RequestBody String jsonString, @PathVariable Long id) {
-        HexEncoder encoded = new HexEncoder(jsonString);
-        Recipe updatingRecipe = Recipe.fromJson(encoded.getDecoded());
-        updatingRecipe.setCategory(categoryService.findByName(updatingRecipe.getCategory().getName()));
-        Recipe recipe = recipeService.findById(id);
-        recipe.setProperties(updatingRecipe);
-        recipe.addStep("");
         recipeService.save(recipe);
         return recipe.toJson();
     }
@@ -141,22 +124,5 @@ public class RecipeApi {
         }
         recipeService.delete(recipe);
     }
-
-    @RequestMapping(value = "/togglefavorite/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ResponseStatus (HttpStatus.OK)
-    public @ResponseBody String toggleFavorite(@PathVariable Long id) {
-        Recipe recipe = recipeService.findById(id);
-        if (recipe.isFavorite(getLoggedUser())) {
-            getLoggedUser().removeFavorite(recipe);
-            recipe.removeFavorite(getLoggedUser());
-        } else {
-            getLoggedUser().addFavorite(recipe);
-            recipe.addFavorite(getLoggedUser());
-        }
-        recipeService.save(recipe);
-        userService.save(getLoggedUser());
-        return recipe.toJson();
-    }
-
 
 }

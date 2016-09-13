@@ -80,7 +80,9 @@ function getRecipeStep (index) {
 }
 
 function getFavUser (index) {
-    return document.getElementById("favUser"+index).value;
+    return {
+        username: document.getElementById("favUser"+index).value
+    };
 }
 
 function getCategoryName (categoryId) {
@@ -105,7 +107,7 @@ function isFavorite(recipe, loggedUser) {
     if (recipe.favoriteUsers == null)
         return false;
     for (i=0;i<recipe.favoriteUsers.length;i++) {
-        if (recipe.favoriteUsers[i].id == loggedUser.id)
+        if (recipe.favoriteUsers[i].name == loggedUser.name)
             return true;
     }
     return false;
@@ -128,7 +130,6 @@ function getRecipe () {
 
 function getNewRecipe () {
     return {
-        id: 0,
         name: "",
         description : "",
         category : {

@@ -130,7 +130,7 @@ function deleteRecipe (buttonId) {
 
 function editRecipe (buttonId) {
     var id = buttonId.split('#').pop();
-    console.log("Deleting recipe id=" + id);
+    console.log("Editing recipe id=" + id);
     if (!checkAccess(getLoggedUser(), getRecipeUser(id))) {
         clearFlash();
         printFlashMessage("You can not edit this recipe, only owner (" + getRecipeUser(id).username + ") can do it. Access denied.", "failure");
@@ -199,6 +199,27 @@ function deleteStep (row) {
     $("#stepsRows").append(stepsRow(recipe));
 }
 
+function toggleFavorite () {
+    var recipe = getRecipe();
+    var currentUser = getLoggedUser();
+    // if loggedUser present in favoriteUsers - remove it, if not - add
+    if (isFavorite(recipe, currentUser)) {
+        recipe.favoriteUsers.splice(recipe.favoriteUsers.indexOf(currentUser),1);
+    } else {
+        recipe.favoriteUsers.push(currentUser);
+    }
+    // update stored favoriteUsers
+    updateFavoriteUsers(recipe);
+    // update icon
+    $("#picHere").children().remove();
+    $("#picHere").append(getFavoriteIconHtmlString(recipe, currentUser));
+}
+
+function updateFavoriteUsers (recipe) {
+    $("#favoriteUsers").children().remove();
+    $("#favoriteUsers").append(getFavoriteUsersHtmlString(recipe));
+}
+
 function uploadPhoto () {
     var file = document.getElementById("file").files[0];
     var recipeId = getRecipeId();
@@ -217,9 +238,9 @@ function uploadPhoto () {
         printFlashMessage("Can not upload file " + file.name + ", because it's size (" + file.size +" bytes) is too big. Maximum size is 128KB.", "failure");
         return;
     }
-    if (fileType != "image") { // File is not image
+    if (fileExtension != "png") { // File is not image
         clearFlash();
-        printFlashMessage("Can not upload file " + file.name + ", because it's not an image file.", "failure");
+        printFlashMessage("Can not upload file " + file.name + ", only '.png' files allowed.", "failure");
         return;
     }
     var formData = new FormData();

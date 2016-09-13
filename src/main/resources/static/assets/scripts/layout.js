@@ -1,15 +1,12 @@
 function getEditRecipeHtmlString(allCategories, recipe) {
-    var i;
+    var i=0;
     var htmlString =
         "<div class='recipes'>" +
         "<input type='hidden' id='recipeIdInput' field='" + recipe.id + "' value='" + recipe.id + "'/>";
 
-    if (recipe.favoriteUsers!=null)
-        for (i = 0; i < recipe.favoriteUsers.length; i++) {
-            htmlString += "<div hidden=\"hidden\">";
-            htmlString += "<input hidden=\"hidden\" id=\"favUser\"" + i + "\" value=\"" + recipe.favoriteUsers[i].username + "\"/>";
-            htmlString += "</div>";
-        }
+    htmlString += "<div id='favoriteUsers' hidden=\"hidden\">";
+    htmlString += getFavoriteUsersHtmlString(recipe);
+    htmlString += "</div>";
 
     htmlString += "<p hidden=\"hidden\" id=\"recipeId\">"+recipe.id+"</p>";
     htmlString += "<p hidden=\"hidden\" id=\"recipeUserName\">"+recipe.user.username+"</p>";
@@ -38,11 +35,7 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     htmlString += "</div>";
     htmlString += "<div class=\"grid-40\">";
     htmlString += "<h2 id=\"picHere\" class=\"flush-right\">";
-    if (isFavorite(recipe, loggedUser)) {
-        htmlString += "<img id=\"favoritedSvg\" src=\"../assets/images/favorited.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
-    } else {
-        htmlString += "<img id=\"favoriteSvg\" src=\"../assets/images/favorite.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
-    }
+    htmlString += getFavoriteIconHtmlString(recipe, loggedUser);
     htmlString += "</h2>";
     htmlString += "</div>";
     htmlString += "</div><div class=\"clear\"></div>";
@@ -57,7 +50,7 @@ function getEditRecipeHtmlString(allCategories, recipe) {
 
     htmlString += "<div class=\"grid-30\">"
     htmlString += "<p id=\"imgAppendHere\">";
-    htmlString += "<img id=\"img\" src=\"/photos/" + recipe.id + "\" height=\"60px\" onclick=\"openImageWindow(this.src)\"/>";
+    htmlString += "<img id=\"img\" src=\"/photos/" + recipe.id + ".png" + "\" height=\"60px\" onclick=\"openImageWindow(this.src)\"/>";
     htmlString += "</p>";
     htmlString += "</div>";
 
@@ -160,7 +153,26 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     return htmlString;
 }
 
+function getFavoriteUsersHtmlString (recipe) {
+    var htmlString="", i=0;
+    if (recipe.favoriteUsers!=null) {
+        for (i = 0; i < recipe.favoriteUsers.length; i++) {
+            htmlString += "<input hidden='hidden' id='favUser" + i + "' value='" + recipe.favoriteUsers[i].username + "'/>";
+        }
+    }
+    return htmlString;
+}
+
+function getFavoriteIconHtmlString (recipe, loggedUser) {
+    if (isFavorite(recipe, loggedUser)) {
+        return "<img id=\"favoritedSvg\" src=\"../assets/images/favorited.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
+    } else {
+        return "<img id=\"favoriteSvg\" src=\"../assets/images/favorite.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
+    }
+}
+
 function getIngredientsRowsHtmlString (recipe) {
+    var i=0;
     var
         htmlString = "<div class=\"grid-20\">";
     htmlString += "<p class=\"label-spacing\">";
@@ -227,6 +239,7 @@ function getIngredientsRowsHtmlString (recipe) {
 }
 
 function getStepsRowsHtmlString (recipe) {
+    var i=0;
     var htmlString = "<div class=\"grid-20\">";
     htmlString += "<p class=\"label-spacing\">";
     htmlString += "<label> Steps </label>";
@@ -259,6 +272,7 @@ function getStepsRowsHtmlString (recipe) {
 }
 
 function getNavBarHtmlString (allCategories) {
+    var i = 0;
     var selectedCategory = getSelectedCategoryId();
     var pattern = getPattern();
     var method = getMethod();
@@ -327,11 +341,11 @@ function getNavBarHtmlString (allCategories) {
 
 function getRecipeRowHtmlString (recipe) {
     var
-        htmlString = "<div class=\"grid-100 row addHover\">";
+        htmlString = "<div id='recipe#"+recipe.id+"' class=\"grid-100 row addHover\">";
     htmlString += "<a href=\"/detail/" + recipe.id +"\">";
     htmlString += "<div class=\"grid-70\">";
     htmlString += "<p>";
-    if ($.inArray(recipe.favoriteUsers, getLoggedUser())>0)
+    if (isFavorite(recipe, getLoggedUser()))
         htmlString += "<span><img src=\"../assets/images/favorited.svg\" height=\"12px\"/></span>";
     else
         htmlString += "<span><img src=\"../assets/images/favorite.svg\" height=\"12px\"/></span>";
@@ -358,6 +372,7 @@ function getRecipeRowHtmlString (recipe) {
 }
 
 function showRecipesList (recipes) {
+    var i = 0;
     $("#recipesList").children().remove();
     if (recipes != null) {
         for (i = 0; i < recipes.length; i++) {

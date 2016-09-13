@@ -287,18 +287,17 @@ public class Recipe {
    }
 
     public void setProperties(Recipe updatingRecipe) {
-        if (updatingRecipe.getName() != null) this.name = updatingRecipe.getName();
-        if (updatingRecipe.getDescription() != null) this.description = updatingRecipe.getDescription();
-        if (updatingRecipe.getPhoto() != null) this.photo = updatingRecipe.getPhoto();
-        // this.user = updatingRecipe.getUser();
-        if (updatingRecipe.getCategory() != null) this.category = updatingRecipe.getCategory();
-        if (updatingRecipe.getFavoriteUsers() != null) this.favoriteUsers = updatingRecipe.getFavoriteUsers();
-        if (updatingRecipe.getIngredients() != null) this.ingredients = updatingRecipe.getIngredients();
-        if (updatingRecipe.getConditions() != null) this.conditions = updatingRecipe.getConditions();
-        if (updatingRecipe.getQuantities() != null) this.quantities = updatingRecipe.getQuantities();
-        if (updatingRecipe.getSteps() != null) this.steps = updatingRecipe.getSteps();
-        if (updatingRecipe.getPrepTime() != null) this.prepTime = updatingRecipe.getPrepTime();
-        if (updatingRecipe.getCookTime() != null) this.cookTime = updatingRecipe.getCookTime();
+        this.name = updatingRecipe.getName();
+        this.description = updatingRecipe.getDescription();
+        this.photo = updatingRecipe.getPhoto();
+        this.category = updatingRecipe.getCategory();
+        this.favoriteUsers = updatingRecipe.getFavoriteUsers();
+        this.ingredients = updatingRecipe.getIngredients();
+        this.conditions = updatingRecipe.getConditions();
+        this.quantities = updatingRecipe.getQuantities();
+        this.steps = updatingRecipe.getSteps();
+        this.prepTime = updatingRecipe.getPrepTime();
+        this.cookTime = updatingRecipe.getCookTime();
     }
 
     private static class RecipeSerializer implements JsonSerializer<Recipe> {
@@ -312,8 +311,12 @@ public class Recipe {
             if (src.getFavoriteUsers()!=null && src.getFavoriteUsers().size()>0) {
                 JsonArray jsonFavUsers = new JsonArray();
                 for (int i=0;i<src.getFavoriteUsers().size();i++) {
-                    JsonPrimitive jsonFavUser = new JsonPrimitive(src.getFavoriteUsers().get(i).getUsername());
-                    jsonFavUsers.add(jsonFavUser);
+                    if (src.getFavoriteUsers().get(i) != null) {
+                        JsonObject jsonFavUser = new JsonObject();
+                        jsonFavUser.addProperty("id", src.getFavoriteUsers().get(i).getId());
+                        jsonFavUser.addProperty("username", src.getFavoriteUsers().get(i).getUsername());
+                        jsonFavUsers.add(jsonFavUser);
+                    }
                 }
                 result.add("favoriteUsers", jsonFavUsers);
             }
@@ -381,7 +384,7 @@ public class Recipe {
             if (object.get("favoriteUsers") != null) {
                 JsonArray jsonFavUsers = object.get("favoriteUsers").getAsJsonArray();
                 for (JsonElement je : jsonFavUsers) {
-                    result.addFavorite(new User(je.getAsJsonPrimitive().getAsString()));
+                    result.addFavorite(new User(je.getAsJsonObject().get("username").getAsString()));
                 }
             }
             if (object.get("category") != null) {
