@@ -35,11 +35,11 @@ public class Recipe {
     private Category category;
 
     @Temporal(TemporalType.TIME)
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private Date prepTime;
 
     @Temporal(TemporalType.TIME)
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private Date cookTime;
 
     @ElementCollection
@@ -277,12 +277,16 @@ public class Recipe {
    }
 
    public static String dateToString(Date date) {
-       DateFormat df = new SimpleDateFormat("HH:mm:ss");
+       if (date == null)
+           return "00:00";
+       DateFormat df = new SimpleDateFormat("HH:mm");
        return df.format(date);
    }
 
    public static Date stringToDate (String string) throws ParseException {
-       DateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+       if (string == null || string.isEmpty())
+           string = "00:00";
+       DateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
        return format.parse(string);
    }
 
@@ -394,8 +398,8 @@ public class Recipe {
             try {
                 result.setPrepTime(stringToDate(object.get("prepTime").getAsString()));
                 result.setCookTime(stringToDate(object.get("cookTime").getAsString()));
-            } catch (Exception ignored) {
-
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
             if (object.get("user") != null) {
                 JsonObject ju = object.get("user").getAsJsonObject();

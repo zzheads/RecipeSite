@@ -2,10 +2,6 @@ function getRecipeId () {
     return parseInt(document.getElementById("recipeIdInput").value);
 }
 
-function updateRecipeId (newId) {
-    document.getElementById("recipeIdInput").value = newId;
-}
-
 function getRecipeName () {
     var value = document.getElementById("recipeName").value;
     var placeholder = document.getElementById("recipeName").placeholder;
@@ -27,17 +23,11 @@ function getRecipeDescription () {
 }
 
 function getRecipePrepTime () {
-    return document.getElementById("recipePrepTime").valueAsNumber;
+    return document.getElementById("recipePrepTime").value;
 }
 
 function getRecipeCookTime () {
-    return document.getElementById("recipeCookTime").valueAsNumber;
-}
-
-function getRecipeUser () {
-    return {
-        username: document.getElementById("recipeUserName").innerText
-    };
+    return document.getElementById("recipeCookTime").value;
 }
 
 function getRecipeCategory () {

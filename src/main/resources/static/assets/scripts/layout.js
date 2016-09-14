@@ -1,8 +1,11 @@
 function getEditRecipeHtmlString(allCategories, recipe) {
-    var i=0;
-    var htmlString =
-        "<div class='recipes'>" +
-        "<input type='hidden' id='recipeIdInput' field='" + recipe.id + "' value='" + recipe.id + "'/>";
+    var htmlString ="";
+
+    htmlString += "<div class='grid-100'>";
+
+    htmlString += "<div class='recipes'>";
+    htmlString += "<div class='row'>&nbsp;</div>";
+    htmlString += "<input type='hidden' id='recipeIdInput' value='" + recipe.id + "'/>";
 
     htmlString += "<div id='favoriteUsers' hidden=\"hidden\">";
     htmlString += getFavoriteUsersHtmlString(recipe);
@@ -11,16 +14,17 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     htmlString += "<p hidden=\"hidden\" id=\"recipeId\">"+recipe.id+"</p>";
     htmlString += "<p hidden=\"hidden\" id=\"recipeUserName\">"+recipe.user.username+"</p>";
     htmlString += "<div class=\"grid-100 row controls\">";
+    htmlString += "<div class=\"clear\"></div>";
     htmlString += "<div class=\"grid-50\">";
     htmlString += "<h2> Recipe Editor </h2>";
     htmlString += "</div>";
     htmlString += "<div class=\"grid-50\">";
     htmlString += "<div class=\"flush-right\">";
     htmlString += "<button type=\"button\" onclick=\"saveRecipe()\">Save Recipe</button> ";
-    htmlString += "<a href=\"/\"><button type=\"button\" class=\"secondary\">Cancel</button></a>";
+    htmlString += "<button type=\"button\" onclick='indexPage()' class=\"secondary\">Cancel</button>";
     htmlString += "</div>";
     htmlString += "</div>";
-    htmlString += "</div><div class=\"clear\"></div>";
+    htmlString += "</div> <div class='clear'></div>";
 
     htmlString += "<div class=\"grid-100 row\">";
     htmlString += "<div class=\"grid-20\">";
@@ -48,9 +52,9 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     htmlString += "</p>";
     htmlString += "</div>";
 
-    htmlString += "<div class=\"grid-30\">";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    htmlString += "<div class=\"grid-30\">";
     htmlString += "<p id=\"imgAppendHere\">";
-    htmlString += "<img id=\"img\" src=\"/photos/" + recipe.id + ".png" + "\" height=\"60px\" onclick=\"openImageWindow(this.src)\"/>";
+    htmlString += "<a href='#'><img id=\"img\" src=\"/photos/" + recipe.id + ".png" + "\" height=\"60px\" onclick=\"openImageWindow(this.src)\"/></a>";
     htmlString += "</p>";
     htmlString += "</div>";
 
@@ -110,7 +114,7 @@ function getEditRecipeHtmlString(allCategories, recipe) {
     htmlString += "</div>";
     htmlString += "</div><div class=\"clear\"></div>";
 
-    htmlString += "<div id='ingredientRows' class=\"grid-100 row\">";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    htmlString += "<div id='ingredientRows' class=\"grid-100 row\">";
     htmlString += getIngredientsRowsHtmlString(recipe);
     htmlString += "<div class=\"clear\"></div>";
     htmlString += "</div>";
@@ -123,6 +127,7 @@ function getEditRecipeHtmlString(allCategories, recipe) {
 
     htmlString += "<div class=\"row\">&nbsp;</div>";
 
+    htmlString += "</div>";
     htmlString += "</div>";
 
     return htmlString;
@@ -137,7 +142,7 @@ function getSelectCategoryRowHtmlString (allCategories, recipe) {
     htmlString += "</div>";
     htmlString += "<div class=\"grid-30\">";
     htmlString += "<p>";
-    htmlString += "<select id='recipeCategory' field='" + recipe.category.id + "' value='" + recipe.category.id + "' onchange='changeSelectedCategory()'>";
+    htmlString += "<select id='recipeCategory'>";
     for (var i = 0; i < allCategories.length; i++) {
         if (recipe.category.id != parseInt(allCategories[i].id)) {
             htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\">" + allCategories[i].name + "</option>";
@@ -146,10 +151,10 @@ function getSelectCategoryRowHtmlString (allCategories, recipe) {
         }
     }
     htmlString += "</select>";
-    for (var i = 0; i < allCategories.length; i++) {
+    for (i = 0; i < allCategories.length; i++) {
         htmlString += "<p id='allCategoriesId"+i+"' hidden='hidden'>"+allCategories[i].id+"</p>";
         htmlString += "<p id='allCategoriesName"+i+"' hidden='hidden'>"+allCategories[i].name+"</p>";
-        htmlString += "<p id=\"getCategoryNameById" + allCategories[i].id + "\" text=\"" + allCategories[i].name + "\" hidden='hidden'></p>";
+        htmlString += "<p id=\"getCategoryNameById" + allCategories[i].id + "\" hidden='hidden'>"+allCategories[i].name+"</p>";
     }
 
     htmlString += "</p>";
@@ -161,7 +166,7 @@ function getSelectCategoryRowHtmlString (allCategories, recipe) {
     htmlString += "<input id='newCategoryNameInput' type='text' placeholder='New Category Name'/>";
     htmlString += "</p>";
     htmlString += "<p>";
-    htmlString += "<button type='button' class='secondary' onclick='addNewCategory()'>Add</button>";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    htmlString += "<button type='button' class='secondary' onclick='addNewCategory()'>Add</button>";
     htmlString += "</p>";
     htmlString += "</div>";
     htmlString += "</div>";
@@ -181,9 +186,9 @@ function getFavoriteUsersHtmlString (recipe) {
 
 function getFavoriteIconHtmlString (recipe, loggedUser) {
     if (isFavorite(recipe, loggedUser)) {
-        return "<img id=\"favoritedSvg\" src=\"../assets/images/favorited.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
+        return "<a href='#'><img id=\"favoritedSvg\" src=\"../assets/images/favorited.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/></a>>";
     } else {
-        return "<img id=\"favoriteSvg\" src=\"../assets/images/favorite.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/>";
+        return "<a href='#'><img id=\"favoriteSvg\" src=\"../assets/images/favorite.svg\" height=\"16px\" onclick=\"toggleFavorite()\"/></a>";
     }
 }
 
@@ -288,69 +293,63 @@ function getStepsRowsHtmlString (recipe) {
 }
 
 function getNavBarHtmlString (allCategories) {
-    var i = 0;
     var selectedCategory = getSelectedCategoryId();
     var pattern = getPattern();
     var method = getMethod();
     var user = getLoggedUser();
-    var htmlString = "<p id='loggedUser' hidden='hidden'>"+user.username+"</p>";
-    htmlString += "<p id='loggedUserRole' hidden='hidden'>"+user.role+"</p>";
-    htmlString += "<div id='categoriesHere'>";
-    for (i=0;i<allCategories.length;i++) {
-        htmlString += "<p id='getCategoryNameById" + allCategories[i].id + "' hidden='hidden'>" + allCategories[i].name + "</p>";
-    }
-    htmlString += "</div>";
-
-    htmlString += "<div class='grid-100 row controls'>";
-    htmlString += "<div class='grid-30'>";
-    htmlString += "<select id='recipeCategory' field='" + selectedCategory.id + "' value='"+selectedCategory.id+"' onchange='linkToSelectedCategory()'>";
-    for (i = 0; i < allCategories.length; i++) {
-        if (selectedCategory.id != parseInt(allCategories[i].id)) {
-            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\">" + allCategories[i].name + "</option>";
-        } else {
-            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\" selected='selected'>" + allCategories[i].name + "</option>";
-        }
-    }
-    htmlString += "</select>";
-
-    htmlString += "</div>";
-    htmlString += "<div class='grid-30' id='search-form'>";
-    htmlString += "<input type='text' id='searchRecipe' name='q' autocomplete='off' value='"+pattern+"' oninput='linkToPattern()'/>";
-    htmlString += "</div>";
-    htmlString += "<div class='grid-20'>";
-    htmlString += "<select id='searchMethod' value='"+method+"'>";
-    if (method == "in Description") {
-        htmlString += "<option selected='selected'>in Description</option>";
-        htmlString += "<option>in Ingredient</option>";
-    } else {
-        htmlString += "<option>in Description</option>";
-        htmlString += "<option selected='selected'>in Ingredient</option>";
-    }
-    htmlString += "</select>";
-    htmlString += "</div>";
-    htmlString += "<div class='grid-20'>";
-    htmlString += "<div class='flush-right'>";
-    htmlString += "<button type='button' onclick='addNewRecipe()'>Add Recipe</button>";
-    htmlString += "</div>";
-    htmlString += "</div>";
-    htmlString += "</div>";
+    var htmlString = "";
 
     htmlString += "<div class='grid-100'>";
-    htmlString += "<div class='recipes'>";
-    htmlString += "<div class='grid-100 row controls'>";
-    htmlString += "<div class='grid-100'>";
-    htmlString += "<h2> Recipes </h2>";
-    htmlString += "</div>";
-    htmlString += "</div> <div class='clear'></div>";
+        htmlString += "<div class='recipes'>";
+            htmlString += "<div class='row'>&nbsp;</div>";
 
-    htmlString += "<div id='recipesList'>";
+            htmlString += "<p id='loggedUser' hidden='hidden'>"+user.username+"</p>";
+            htmlString += "<p id='loggedUserRole' hidden='hidden'>"+user.role+"</p>";
+            htmlString += "<div id='categoriesHere'>";
+            for (var i=0;i<allCategories.length;i++) {
+                htmlString += "<p id='getCategoryNameById" + allCategories[i].id + "' hidden='hidden'>" + allCategories[i].name + "</p>";
+            }
+            htmlString += "</div>";
 
+            htmlString += "<div class='grid-100 row controls'>";
 
+                htmlString += "<div class='grid-30'>";
+                    htmlString += "<select id='selectCategory' onchange='linkToSelectedCategory()' class='label-spacing'>";
+                    for (i = 0; i < allCategories.length; i++) {
+                        if (selectedCategory.id != parseInt(allCategories[i].id)) {
+                            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\">" + allCategories[i].name + "</option>";
+                        } else {
+                            htmlString += "<option value=\"" + parseInt(allCategories[i].id) + "\" selected='selected'>" + allCategories[i].name + "</option>";
+                        }
+                    }
+                    htmlString += "</select>";
+                htmlString += "</div>";
 
-    htmlString += "</div>";
-    htmlString += "<div class='row'>&nbsp;</div>";
-    htmlString += "</div>"; <!-- recipes -->
-    htmlString += "</div>"; <!-- grid-100 -->
+                htmlString += "<div class='grid-30' id='search-form'>";
+                    htmlString += "<input type='text' id='searchRecipe' name='q' autocomplete='off' value='"+pattern+"' oninput='linkToPattern()' class='label-spacing'/>";
+                htmlString += "</div>";
+
+                htmlString += "<div class='grid-20'>";
+                    htmlString += "<select id='searchMethod' class='label-spacing'>";
+                    if (method == "in Description") {
+                        htmlString += "<option selected='selected'>in Description</option>";
+                        htmlString += "<option>in Ingredient</option>";
+                    } else {
+                        htmlString += "<option>in Description</option>";
+                        htmlString += "<option selected='selected'>in Ingredient</option>";
+                    }
+                    htmlString += "</select>";
+                htmlString += "</div>";
+
+                htmlString += "<div class='grid-20'>";
+                    htmlString += "<div class='flush-right'>";
+                        htmlString += "<button type='button' onclick='addNewRecipe()'>Add Recipe</button>";
+                    htmlString += "</div>";
+                htmlString += "</div>";
+
+            htmlString += "</div><div class=\"clear\"></div>";
+
+            htmlString += "<div id='recipesList'>";
 
     return htmlString;
 }
@@ -389,17 +388,20 @@ function getRecipeRowHtmlString (recipe) {
 
 function showRecipesList (recipes) {
     var i = 0;
-    $("#recipesList").children().remove();
+    var recipesList = $("#recipesList");
+    recipesList.children().remove();
     if (recipes != null) {
         for (i = 0; i < recipes.length; i++) {
-            $("#recipesList").append(getRecipeRowHtmlString(recipes[i]));
+            recipesList.append(getRecipeRowHtmlString(recipes[i]));
         }
+        recipesList.append("</div></div></div><div class='row'>&nbsp;</div>");
     }
 }
 
 function toListMode (allCategories, recipes) {
-    $("#root").children().remove();
-    $("#root").append(getNavBarHtmlString(allCategories));
+    var root = $("#root");
+    root.children().remove();
+    root.append(getNavBarHtmlString(allCategories));
     showRecipesList(recipes);
 }
 
@@ -429,7 +431,7 @@ function toEditMode (allCategories, recipe) {
     // save selectedCategory, pattern, method
     updateSelectedCategory();
     updatePatternAndMethod();
-    $("#root").children().remove();
-    $("#root").append(getEditRecipeHtmlString(allCategories, recipe))
+    var root = $("#root");
+    root.children().remove();
+    root.append(getEditRecipeHtmlString(allCategories, recipe))
 }
-

@@ -6,8 +6,6 @@ function getLoggedUser () {
 }
 
 function getRecipeUser (id) {
-    var element = document.getElementById("recipeUser#" + id);
-    var username = document.getElementById("recipeUser#" + id).innerText;
     return {
         username: document.getElementById("recipeUser#" + id).innerText
     };
@@ -57,7 +55,7 @@ function getAllCategories () {
 }
 
 function linkToSelectedCategory () {
-    var selectedCategory = getSelectedCategory();
+    var selectedCategory = getSelectedCategoryId();
     console.log("Select category changed, starting searching recipes by category with id: " + selectedCategory);
     // Update store place
     updateSelectedCategory();
@@ -158,16 +156,17 @@ function editRecipe (buttonId) {
         dataType: "json",
         contentType: "application/json",
         headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
-        success: function (data) {
-            var allCategories = data;
+        success: function (allCategories) {
             $.ajax({
                 url: "/recipe/"+id,
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json",
                 headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
-                success: function (data) {
-                    toEditMode(allCategories, data);
+                success: function (recipe) {
+                    console.log("prepTime: "+recipe.prepTime);
+                    console.log("cookTime: "+recipe.cookTime);
+                    toEditMode(allCategories, recipe);
                 },
                 error: getErrorMsg
             });
@@ -186,15 +185,17 @@ function addIngredient () {
         recipe.ingredients = [];
     }
     recipe.ingredients.push(newIngredient);
-    $("#ingredientRows").children().remove();
-    $("#ingredientRows").append(getIngredientsRowsHtmlString(recipe));
+    var ingredientRows = $("#ingredientRows");
+    ingredientRows.children().remove();
+    ingredientRows.append(getIngredientsRowsHtmlString(recipe));
 }
 
 function deleteIngredient (row) {
     var recipe = getRecipe();
     recipe.ingredients.splice(row, 1);
-    $("#ingredientRows").children().remove();
-    $("#ingredientRows").append(getIngredientsRowsHtmlString(recipe));
+    var ingredientRows = $("#ingredientRows");
+    ingredientRows.children().remove();
+    ingredientRows.append(getIngredientsRowsHtmlString(recipe));
 }
 
 function addStep () {
@@ -203,15 +204,17 @@ function addStep () {
         recipe.steps = [];
     }
     recipe.steps.push("");
-    $("#stepsRows").children().remove();
-    $("#stepsRows").append(getStepsRowsHtmlString(recipe));
+    var stepsRows = $("#stepsRows");
+    stepsRows.children().remove();
+    stepsRows.append(getStepsRowsHtmlString(recipe));
 }
 
 function deleteStep (row) {
     var recipe = getRecipe();
     recipe.steps.splice(row, 1);
-    $("#stepsRows").children().remove();
-    $("#stepsRows").append(getStepsRowsHtmlString(recipe));
+    var stepsRows = $("#stepsRows");
+    stepsRows.children().remove();
+    stepsRows.append(getStepsRowsHtmlString(recipe));
 }
 
 function toggleFavorite () {
@@ -226,13 +229,15 @@ function toggleFavorite () {
     // update stored favoriteUsers
     updateFavoriteUsers(recipe);
     // update icon
-    $("#picHere").children().remove();
-    $("#picHere").append(getFavoriteIconHtmlString(recipe, currentUser));
+    var picHere = $("#picHere");
+    picHere.children().remove();
+    picHere.append(getFavoriteIconHtmlString(recipe, currentUser));
 }
 
 function updateFavoriteUsers (recipe) {
-    $("#favoriteUsers").children().remove();
-    $("#favoriteUsers").append(getFavoriteUsersHtmlString(recipe));
+    var favoriteUsers = $("#favoriteUsers");
+    favoriteUsers.children().remove();
+    favoriteUsers.append(getFavoriteUsersHtmlString(recipe));
 }
 
 function addNewCategory () {
@@ -262,8 +267,9 @@ function addNewCategory () {
             newCategory = data;
             allCategories.push(newCategory);
             // update select with new category
-            $("#selectCategoryRow").children().remove();
-            $("#selectCategoryRow").append(getSelectCategoryRowHtmlString(allCategories, recipe));
+            var selectCategoryRow = $("#selectCategoryRow");
+            selectCategoryRow.children().remove();
+            selectCategoryRow.append(getSelectCategoryRowHtmlString(allCategories, recipe));
             clearFlash();
             printFlashMessage("New category (name='"+data.name+"', id="+data.id+") successfully added.", "success");
         },
@@ -304,7 +310,7 @@ function uploadPhoto () {
         processData: false,
         headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
         cache: false,
-        success: function (data) {
+        success: function () {
             var someRandQuery = "?" + (Math.random()*100000);
             $("#imgAppendHere").html("<a href=\"#\"><img id=\"img\" src=\"/photos/" + recipeId + "." + fileExtension + someRandQuery + "\" height=\"60px\" onclick=\"openImageWindow(this.src);\"/></a>");
             clearFlash();
@@ -374,20 +380,32 @@ function addNewRecipe () {
         data: JSON.stringify(newRecipe, null, "\t"),
         contentType: "application/json",
         headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
-        success: function (data) {
-            newRecipe = data;
+        success: function (newRecipe) {
             $.ajax({
                 url: "/category/",
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json",
                 headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
-                success: function (data) {
-                    var allCategories = data;
+                success: function (allCategories) {
                     toEditMode(allCategories, newRecipe);
                 },
                 error: getErrorMsg
             });
+        },
+        error: getErrorMsg
+    });
+}
+
+function indexPage () {
+    $.ajax({
+        url: "/recipe",
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json",
+        headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
+        success: function (allRecipes) {
+            toListMode(getAllCategories(), allRecipes);
         },
         error: getErrorMsg
     });

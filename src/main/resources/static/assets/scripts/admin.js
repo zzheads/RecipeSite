@@ -1,9 +1,8 @@
 function getRoleUser() {
-    var role = {
+    return {
         id: 1,
         name: "ROLE_USER"
-    };;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    return role;
+    };
 }
 
 function getUsernameById (id) {
@@ -15,11 +14,10 @@ function getPasswordById (id) {
 }
 
 function getRoleById (id) {
-    var role = {
-        id: 0, // unknown
+    return {
+        id: id,
         name: document.getElementById("inputRole#"+id).value
     };
-    return role;
 }
 
 function countUsers() {
@@ -77,12 +75,12 @@ function addUser() {
         dataType: "json",
         headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
         data: JSON.stringify(newUser, null, "\t"),
-        success: function (data) {
-            console.log(data);
+        success: function (newUser) {
+            console.log(newUser);
             console.log(countUsers());
-            $("#users").append(toHtml(data));
+            $("#users").append(toHtml(newUser));
             clearFlash();
-            printFlashMessage("User (id="+data.id+") added.", "success");
+            printFlashMessage("User (id="+newUser.id+") added.", "success");
         },
         error: getErrorMsg
     });
@@ -128,21 +126,22 @@ function saveUser(buttonId) {
         contentType: "application/json",
         headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
         data: JSON.stringify(user),
-        success: function (data) {
+        success: function (updatedUser) {
             document.getElementById("user#"+user.id).remove();
-            $("#users").append(toHtml(data));
+            $("#users").append(toHtml(updatedUser));
             clearFlash();
-            printFlashMessage("User (id="+data.id+") saved.", "success");
+            printFlashMessage("User (id="+updatedUser.id+") saved.", "success");
         },
         error: getErrorMsg
     });
 }
 
 function checkUsers() {
-    $("#buttonsHere").children().remove();
+    var buttonsHere = $("#buttonsHere");
+    buttonsHere.children().remove();
     $("#title").remove();
     $("#titleHere").append("<h1  id=\"title\"> Users: </h1>");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
+    buttonsHere.append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
     $("#users").hide();
     $.ajax({
         url: "/user",
@@ -150,14 +149,14 @@ function checkUsers() {
         dataType: "json",
         contentType: "application/json",
         headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
-        success: function(data) {
-            for (i=0;i<data.length;i++) {
+        success: function(allUsers) {
+            for (i=0;i<allUsers.length;i++) {
                 $("#bases").append(
                     "<div>"+
-                    "<p><h2>"+"id/username: " + data[i].id+" / "+data[i].username+"</h2></p>"+
-                    "<p>"+"password: " + data[i].password+"</p>"+
-                    "<p>"+"role: " + data[i].role.name+"</p>"+
-                    "<p>"+"authorities: " + JSON.stringify(data[i].authorities)+"</p>"+
+                    "<p><h2>"+"id/username: " + allUsers[i].id+" / "+allUsers[i].username+"</h2></p>"+
+                    "<p>"+"password: " + allUsers[i].password+"</p>"+
+                    "<p>"+"role: " + allUsers[i].role.name+"</p>"+
+                    "<p>"+"authorities: " + JSON.stringify(allUsers[i].authorities)+"</p>"+
                     "</div><br/>");
             }
         },
@@ -166,10 +165,11 @@ function checkUsers() {
 }
 
 function checkRecipes() {
-    $("#buttonsHere").children().remove();
+    var buttonsHere = $("#buttonsHere");
+    buttonsHere.children().remove();
     $("#title").remove();
     $("#titleHere").append("<h1 id=\"title\"> Recipes: </h1>");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
+    buttonsHere.append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
     $("#users").hide();
     $.ajax({
         url: "/recipe",
@@ -177,47 +177,47 @@ function checkRecipes() {
         dataType: "json",
         contentType: "application/json",
         headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
-        success: function(data) {
-            for (i=0;i<data.length;i++) {
+        success: function(allRecipes) {
+            for (i=0;i<allRecipes.length;i++) {
                 var htmlString =
                     "<div>"+
-                    "<p><h2>"+ "id/name: "+data[i].id+ " / "+ data[i].name+ "</h2></p>"+
-                    "<p>"+ "description: "+data[i].description+ "</p>"+
-                    "<p>"+ "category: "+JSON.stringify(data[i].category, null, "\t")+ "</p>"+
-                    "<p>"+ "user: "+JSON.stringify(data[i].user, null, "\t")+ "</p>"+
-                    "<p>"+ "prepTime: "+data[i].prepTime+ "</p>"+
-                    "<p>"+ "cookTime: "+data[i].cookTime+ "</p>";
+                    "<p><h2>"+ "id/name: "+allRecipes[i].id+ " / "+ allRecipes[i].name+ "</h2></p>"+
+                    "<p>"+ "description: "+allRecipes[i].description+ "</p>"+
+                    "<p>"+ "category: "+JSON.stringify(allRecipes[i].category, null, "\t")+ "</p>"+
+                    "<p>"+ "user: "+JSON.stringify(allRecipes[i].user, null, "\t")+ "</p>"+
+                    "<p>"+ "prepTime: "+allRecipes[i].prepTime+ "</p>"+
+                    "<p>"+ "cookTime: "+allRecipes[i].cookTime+ "</p>";
 
-                if (data[i].photo != null && data[i].photo.length>0) {
+                if (allRecipes[i].photo != null && allRecipes[i].photo.length>0) {
                     htmlString += "<p>photo: detected</p>";
                 } else {
                     htmlString += "<p>photo: n/a</p>";
                 }
 
-                if (data[i].favoriteUsers != null && data[i].favoriteUsers.length>0) {
+                if (allRecipes[i].favoriteUsers != null && allRecipes[i].favoriteUsers.length>0) {
                     htmlString += "<p>favoriteUsers: ";
-                    for (j=0;j<data[i].favoriteUsers.length;j++) {
-                        htmlString += JSON.stringify(data[i].favoriteUsers[j], null, "\t");
+                    for (j=0;j<allRecipes[i].favoriteUsers.length;j++) {
+                        htmlString += JSON.stringify(allRecipes[i].favoriteUsers[j], null, "\t");
                     }
                     htmlString += "</p>";
                 } else {
                     htmlString += "<p>favoriteUsers: null</p>";
                 }
 
-                if (data[i].ingredients != null && data[i].ingredients.length>0) {
+                if (allRecipes[i].ingredients != null && allRecipes[i].ingredients.length>0) {
                     htmlString += "<p>ingredients: ";
-                    for (j=0;j<data[i].ingredients.length;j++) {
-                        htmlString += JSON.stringify(data[i].ingredients[j], null, "\t");
+                    for (j=0;j<allRecipes[i].ingredients.length;j++) {
+                        htmlString += JSON.stringify(allRecipes[i].ingredients[j], null, "\t");
                     }
                     htmlString += "</p>";
                 } else {
                     htmlString += "<p>ingredients: null</p>";
                 }
 
-                if (data[i].steps != null && data[i].steps.length>0) {
+                if (allRecipes[i].steps != null && allRecipes[i].steps.length>0) {
                     htmlString += "<p>steps: ";
-                    for (j=0;j<data[i].steps.length;j++) {
-                        htmlString += data[i].steps[j]+"; ";
+                    for (j=0;j<allRecipes[i].steps.length;j++) {
+                        htmlString += allRecipes[i].steps[j]+"; ";
                     }
                     htmlString += "</p>";
                 } else {
@@ -234,23 +234,24 @@ function checkRecipes() {
 }
 
 function checkCategories() {
-    $("#buttonsHere").children().remove();
+    var buttonsHere = $("#buttonsHere");
+    buttonsHere.children().remove();
     $("#title").remove();
     $("#titleHere").append("<h1  id=\"title\"> Categories: </h1>");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
+    buttonsHere.append("<a href=\"#\"><button id=\"backToEditButton\" type=\"button\" onclick=\"backToEdit()\" class=\"secondary\">Back to Edit</button></a>");
     $("#users").hide();
     $.ajax({
         url: "/category",
         type: "GET",
         dataType: "json",
         headers: {"X-CSRF-Token": $("meta[name='_csrf']").attr("content")},
-        success: function(data) {
-            for (i=0;i<data.length;i++) {
+        success: function(allCategories) {
+            for (i=0;i<allCategories.length;i++) {
                 $("#bases").append(
                     "<div id='category#"+i+"' class='grid-100 row'>"+
                         "<div class='grid-80'>"+
-                            "<p><h2>"+"id/name: " + data[i].id+" / "+data[i].name+"</h2></p>"+
-                            "<p>"+"recipes: " + JSON.stringify(data[i].recipes)+"</p>"+
+                            "<p><h2>"+"id/name: " + allCategories[i].id+" / "+allCategories[i].name+"</h2></p>"+
+                            "<p>"+"recipes: " + JSON.stringify(allCategories[i].recipes)+"</p>"+
                         "</div>"+
                         "<div class='grid-20'>"+
                             "<p class='label-spacing flush-right'>"+
@@ -286,13 +287,14 @@ function deleteCategory (buttonId) {
 }
 
 function backToEdit() {
+    var buttonsHere = $("#buttonsHere");
     $("#title").remove();
     $("#titleHere").append("<h1  id=\"title\"> Admin Panel </h1>");
-    $("#buttonsHere").children().remove();
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkCategoriesButton\" type=\"button\" onclick=\"checkCategories()\" class=\"secondary\">Check Categories</button></a> ");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkRecipesButton\" type=\"button\" onclick=\"checkRecipes()\" class=\"secondary\">Check Recipes</button></a> ");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"checkUsersButton\" type=\"button\" onclick=\"checkUsers()\" class=\"secondary\">Check Users</button></a> ");
-    $("#buttonsHere").append("<a href=\"#\"><button id=\"addUserButton\" type=\"button\" onclick=\"addUser()\">Add User</button></a>");
+    buttonsHere.children().remove();
+    buttonsHere.append("<a href=\"#\"><button id=\"checkCategoriesButton\" type=\"button\" onclick=\"checkCategories()\" class=\"secondary\">Check Categories</button></a> ");
+    buttonsHere.append("<a href=\"#\"><button id=\"checkRecipesButton\" type=\"button\" onclick=\"checkRecipes()\" class=\"secondary\">Check Recipes</button></a> ");
+    buttonsHere.append("<a href=\"#\"><button id=\"checkUsersButton\" type=\"button\" onclick=\"checkUsers()\" class=\"secondary\">Check Users</button></a> ");
+    buttonsHere.append("<a href=\"#\"><button id=\"addUserButton\" type=\"button\" onclick=\"addUser()\">Add User</button></a>");
     $("#users").show();
     $("#bases").children().remove();
 }
