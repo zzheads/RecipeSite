@@ -1,7 +1,6 @@
 package com.zzheads.recipesite.config;
 
 
-
 import com.zzheads.recipesite.model.User;
 import com.zzheads.recipesite.service.RoleService;
 import com.zzheads.recipesite.service.UserService;
@@ -35,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private RoleService roleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
