@@ -48,8 +48,8 @@
             <label> Name </label>
           </p>
         </div>
-        <div class="grid-40">
-          <p th:text="${recipe.name}">
+        <div id="recipeNameRoot" class="grid-40">
+          <p id="recipeName" th:text="${recipe.name}" onclick="toggleInputMode(this.id)">
             Brioche French Toast with Nutella
           </p>
         </div>
@@ -197,6 +197,7 @@
 <script src="../assets/vendor/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/recipe.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="../assets/scripts/details.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/flashMessage.js" type="text/javascript" charset="utf-8"></script>
 <script src="../assets/scripts/openImageWindow.js" type="text/javascript" charset="utf-8"></script>
 </body>
