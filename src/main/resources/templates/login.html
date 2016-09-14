@@ -14,7 +14,8 @@
             <div class="grid-100">
 
                 <form th:action="@{/login}" th:object="${user}" method="post">
-                  <div class="prefix-20 grid-60 suffix-20">
+                    <input th:name="${_csrf.headerName}" th:value="${_csrf.token}" hidden="hidden"/>
+                    <div class="prefix-20 grid-60 suffix-20">
                     <p><input th:field="*{username}" placeholder="Username"/></p>
                   </div> <div class="clear"></div>
                   <div class="prefix-20 grid-60 suffix-20">
@@ -22,7 +23,7 @@
                   </div>
                   <div class="clear"></div>
                     <div class="prefix-35 grid-10 suffix-5">
-                        <a href="#"><button type="button" class="secondary">SignUp</button></a>
+                        <a th:href="@{/signup}"><button type="button" class="secondary">SignUp</button></a>
                     </div>
                     <div class="prefix-5 grid-10 suffix-35">
                         <button type="submit">Login</button>

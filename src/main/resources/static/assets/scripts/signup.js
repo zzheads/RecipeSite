@@ -47,10 +47,13 @@ function submitForm() {
         url: "/user",
         type: "POST",
         dataType: "json",
+        contentType: "application/json",
         data: JSON.stringify(newUser, null, "\t"),
+        headers: {"X-CSRF-Token" : $("meta[name='_csrf']").attr("content")},
         success: function (data) {
             clearFlash();
             printFlashMessage("Registered new user with username ("+data.username+") and password ("+data.password+").", "success");
-        }
+        },
+        error: getErrorMsg
     });
 }
