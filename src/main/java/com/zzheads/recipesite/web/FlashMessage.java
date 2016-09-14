@@ -12,7 +12,7 @@ public class FlashMessage {
         this.status = status;
     }
 
-    public static enum Status {
+    public enum Status {
         SUCCESS,
         INFO,
         FAILURE
