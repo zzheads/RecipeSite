@@ -1,5 +1,7 @@
 package com.zzheads.recipesite.service;
 
+import com.zzheads.recipesite.dao.RecipeDao;
+import com.zzheads.recipesite.dao.RoleDao;
 import com.zzheads.recipesite.dao.UserDao;
 import com.zzheads.recipesite.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,14 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final RoleDao roleDao;
+    private final RecipeDao recipeDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, RecipeDao recipeDao) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.recipeDao = recipeDao;
     }
 
     @Override
