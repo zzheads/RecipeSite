@@ -51,8 +51,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void save(Recipe recipe) {
-        recipeDao.save(recipe);
+    public Long save(Recipe recipe) {
+        return recipeDao.save(recipe).getId();
     }
 
     @Override

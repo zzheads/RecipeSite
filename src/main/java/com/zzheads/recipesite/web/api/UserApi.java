@@ -41,8 +41,7 @@ public class UserApi {
         }
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setId(null);
-        userService.save(user);
+        user.setId(userService.save(user));
         return user.toJson();
     }
 
@@ -68,7 +67,7 @@ public class UserApi {
         User user = userService.findById(id);
         user.setProperties(updatingUser);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
+        user.setId(userService.save(user));
         return user.toJson();
     }
 

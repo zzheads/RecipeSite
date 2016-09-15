@@ -214,19 +214,22 @@ public class User implements UserDetails {
         public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             User result = new User();
             JsonObject object = json.getAsJsonObject();
-            result.setId(object.get("id").getAsLong());
-            result.setUsername(object.get("username").getAsString());
-            result.setPassword(object.get("password").getAsString());
-            result.setEnabled(object.get("enabled").getAsBoolean());
+            if (object.get("id")!=null) result.setId(object.get("id").getAsLong());
+            if (object.get("username")!=null) result.setUsername(object.get("username").getAsString());
+            if (object.get("password")!=null) result.setPassword(object.get("password").getAsString());
+            if (object.get("enabled")!=null) result.setEnabled(object.get("enabled").getAsBoolean());
             if (object.get("favoriteRecipes")!=null) {
                 for (JsonElement je : object.get("favoriteRecipes").getAsJsonArray()) {
                     result.addFavorite(new Recipe(je.getAsJsonPrimitive().getAsString()));
                 }
             }
-            Role role = new Role();
-            role.setId(object.get("role").getAsJsonObject().get("id").getAsLong());
-            role.setName(object.get("role").getAsJsonObject().get("name").getAsString());
-            result.setRole(role);
+            if (object.get("role")!=null) {
+                JsonObject jsonRole = object.get("role").getAsJsonObject();
+                Role role = new Role();
+                if (jsonRole.get("id")!=null) role.setId(jsonRole.get("id").getAsLong());
+                if (jsonRole.get("name")!=null) role.setName(jsonRole.get("name").getAsString());
+                result.setRole(role);
+            }
             return result;
         }
     }

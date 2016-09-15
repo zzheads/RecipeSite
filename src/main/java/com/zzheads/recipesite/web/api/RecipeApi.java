@@ -8,7 +8,6 @@ import com.zzheads.recipesite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -33,31 +32,18 @@ public class RecipeApi {
         this.userService = userService;
     }
 
-    public User getLoggedUser() {
+    private User getLoggedUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
-    public String getCurrentUsername () {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username;
     }
 
     @RequestMapping(value = "/recipe", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    String addRecipe(@RequestBody String jsonString) {
+    public @ResponseBody String addRecipe(@RequestBody String jsonString) {
         Recipe recipe = Recipe.fromJson(jsonString);
         recipe.setUser(getLoggedUser());
         if (recipe.getCategory() != null)
             recipe.setCategory(categoryService.findByName(recipe.getCategory().getName()));
-        recipe.setId(null);
-        recipeService.save(recipe);
+        recipe.setId(recipeService.save(recipe));
         return recipe.toJson();
     }
 

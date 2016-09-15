@@ -14,7 +14,7 @@ public interface RecipeService {
     Recipe findById(Long recipeId);
     void delete(Long id);
     void delete(Recipe recipe);
-    void save(Recipe recipe);
+    Long save(Recipe recipe);
     List<Recipe> findAll(User currentUser);
     void addToCategory (Recipe recipe, Category category);
     List<Recipe> findByCategory(Category category);

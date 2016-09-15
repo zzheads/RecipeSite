@@ -308,10 +308,10 @@ public class Recipe {
         @Override
         public JsonElement serialize(Recipe src, java.lang.reflect.Type typeOfSrc, JsonSerializationContext context) {
             JsonObject result = new JsonObject();
-            result.addProperty("id", src.getId());
-            result.addProperty("photo", Arrays.toString(src.getPhoto()));
-            result.addProperty("name", src.getName());
-            result.addProperty("description", src.getDescription());
+            if (src.getId()!=null) result.addProperty("id", src.getId());
+            if (src.getPhoto()!=null) result.addProperty("photo", Arrays.toString(src.getPhoto()));
+            if (src.getName()!=null) result.addProperty("name", src.getName());
+            if (src.getDescription()!=null) result.addProperty("description", src.getDescription());
             if (src.getFavoriteUsers()!=null && src.getFavoriteUsers().size()>0) {
                 JsonArray jsonFavUsers = new JsonArray();
                 for (int i=0;i<src.getFavoriteUsers().size();i++) {
@@ -396,8 +396,8 @@ public class Recipe {
                 result.setCategory(new Category(jc.get("id").getAsLong(), jc.get("name").getAsString()));
             }
             try {
-                result.setPrepTime(stringToDate(object.get("prepTime").getAsString()));
-                result.setCookTime(stringToDate(object.get("cookTime").getAsString()));
+                if (object.get("prepTime")!=null) result.setPrepTime(stringToDate(object.get("prepTime").getAsString()));
+                if (object.get("cookTime")!=null)result.setCookTime(stringToDate(object.get("cookTime").getAsString()));
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
