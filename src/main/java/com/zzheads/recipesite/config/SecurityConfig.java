@@ -2,7 +2,6 @@ package com.zzheads.recipesite.config;
 
 
 import com.zzheads.recipesite.model.User;
-import com.zzheads.recipesite.service.RoleService;
 import com.zzheads.recipesite.service.UserService;
 import com.zzheads.recipesite.web.FlashMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private UserService userService;
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
